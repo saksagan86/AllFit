@@ -1,27 +1,26 @@
-import { Routes, Route } from 'react-router-dom'
+import React from 'react';
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
+
 import Navbar from './components/Navbar.jsx'
 import HomePage from './pages/HomePage.jsx'
 import AanbodPage from './pages/AanbodPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import LocatiesPage from './pages/LocatiesPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
-import './App.css'
+import AanbodOverzicht from './Components/AanbodOverzicht';
+import DetailPagina from './Pages/DetailPagina'; 
 
 function App() {
     return (
-        <>
-            <Navbar />
-            <main className="page-content">
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/aanbod" element={<AanbodPage />} />
-                    <Route path="/locaties" element={<LocatiesPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-            </main>
-        </>
-    )
+        <div>
+            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto:wght@700&display=swap" rel="stylesheet"></link>
+            <Routes>
+                <Route path="/" element={<AanbodOverzicht />} />
+                <Route path="/aanbod/:sportNaam" element={<DetailPagina />} />
+            </Routes>
+        </div>
+    );
 }
 
-export default App
+export default App;
