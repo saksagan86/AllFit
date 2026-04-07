@@ -1,17 +1,20 @@
-//import reactLogo from './assets/react.svg'
-//import viteLogo from './assets/vite.svg'
-//import heroImg from './assets/hero.png'
-import InfoBlock from './assets/infoBlock.jsx'
-import HomePage from './HomePage.jsx'
-import './App.css'
+import React from 'react';
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
+
+import AanbodOverzicht from './Components/AanbodOverzicht';
+import DetailPagina from './Pages/DetailPagina'; 
 
 function App() {
     return (
         <div>
             <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto:wght@700&display=swap" rel="stylesheet"></link>
-            <HomePage></HomePage>
+            <Routes>
+                <Route path="/" element={<AanbodOverzicht />} />
+                <Route path="/aanbod/:sportNaam" element={<DetailPagina />} />
+            </Routes>
         </div>
-  )
+    );
 }
 
-export default App
+export default App;
