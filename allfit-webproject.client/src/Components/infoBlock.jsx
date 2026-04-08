@@ -9,8 +9,8 @@ function InfoBlock({ title, description, foto_url }) {
                 <p>
                     {description}
                 </p>
-                <button>
-                    Call To Action
+                <button class='button'>
+                    Proefles aanvragen!
                 </button>
             </div>
         </div>
