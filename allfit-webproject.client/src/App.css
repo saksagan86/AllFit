@@ -143,25 +143,26 @@ ul {
 }
 
 @media (max-width: 768px) {
-  .hamburger {
-    display: flex;
-  }
+    .hamburger {
+        display: flex;
+    }
 
-  .nav-menu {
-    display: none;
-    position: absolute;
-    top: 70px;
-    right: 1rem;
-    flex-direction: column;
-    background-color: white;
-    border: 1px solid #ddd;
-    padding: 1rem;
-    border-radius: 8px;
-  }
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 70px;
+        right: 1rem;
+        flex-direction: column;
+        background-color: white;
+        border: 1px solid #ddd;
+        padding: 1rem;
+        border-radius: 8px;
+    }
 
-  .nav-menu.open {
-    display: flex;
-  }
+        .nav-menu.open {
+            display: flex;
+        }
+}
 /* 3 Klassen om de titel & kopjes van een pagina vast te stellen met o.a. een lijntje */
 .titelaanbodoverzicht {
     font-size: 25px; 
