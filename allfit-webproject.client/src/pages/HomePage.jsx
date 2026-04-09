@@ -3,8 +3,8 @@ import InfoBlock from "../Components/infoBlock"
 import Navbar from "../components/Navbar";
 import AanbodOverzicht from "../Components/AanbodOverzicht";
 import LocationCard from "../Components/LocationCard";
-import locations from '../data/locations'
-
+import LocatiesPage from "./LocatiesPage";
+import LocationsMap from "../Components/LocationsMap";
 function HomePage() {
     const allFitInfo = [
         <InfoBlock title="Over AllFit" description="Allfit is een inclusieve sportschool waar community centraal staat!" foto_url="https://cdn.pixabay.com/photo/2022/06/29/13/31/power-club-7291776_1280.jpg" ></InfoBlock >,
@@ -12,16 +12,12 @@ function HomePage() {
         <InfoBlock title="Sporten met een beperking" description="Bij AllFit is het ook mogelijk om te sporten met een beperking. Benieuwd? Boek een kennismakingsgesprek" foto_url="https://cdn.pixabay.com/photo/2022/06/29/13/31/power-club-7291776_1280.jpg"></InfoBlock>
     ];
 
-    const location_cards = locations.map(
-        location => <LocationCard key={location.id} location={location}></LocationCard>
-    );
-
     return (
         <div>
             <ScrollBlock
                 items={allFitInfo}></ScrollBlock>
-            <ScrollBlock
-                items={location_cards}></ScrollBlock>
+            <LocatiesPage></LocatiesPage>
+            <LocationsMap></LocationsMap>
             <AanbodOverzicht></AanbodOverzicht>
             {/*<Lidmaatschappen></Lidmaatschappen>*/}
         </div>
