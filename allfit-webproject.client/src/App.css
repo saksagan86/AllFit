@@ -1,5 +1,5 @@
 body {
-  margin: 0;
+  margin: 5px;
   font-family: Arial, sans-serif;
 }
 
@@ -74,7 +74,7 @@ body {
 }
 
 .page-content {
-  max-width: 1200px;
+  width: 1200px;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -197,8 +197,8 @@ ul {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        width: 400px;
-        height: 315px;
+        width:  375px;
+        height: 340px;
         margin: 10px;
         background-color: #F3E5D3;
         color: #333333;
