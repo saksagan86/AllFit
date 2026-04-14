@@ -20,11 +20,6 @@ function DetailPagina() {
 
     return (
         <div>
-            <div className="titelaanbodoverzicht">
-                <h2 style={{ textTransform: 'capitalize', margin: "5px" }}>{sportNaam}</h2>
-                <div className="lijntje"></div>
-            </div>
-
             <div>
                 {GeselecteerdComponent}
             </div>

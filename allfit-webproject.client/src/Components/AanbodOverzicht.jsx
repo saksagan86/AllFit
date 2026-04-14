@@ -20,11 +20,11 @@ function AanbodOverzicht() {
 
                     <div className="aanbodinfo">
                         <div className="linkerkant">
-                            <h3 className="titel" style={{ fontSize: "23px"}}>Fitness</h3>
+                            <h3 className="titel" style={{ fontSize: "20px", padding: "0px 10px" }}>Fitness</h3>
                             <Link className="button" to="/aanbod/fitness">Bekijk details</Link>
                         </div>
                         <div className="rechterkant">
-                            <p>Kom vrij trainen in onze ruime en moderne fitnessruimte, volledig voorzien van de allernieuwste apparatuur. Of je nu voornamelijk focust op krachttraining in de uitgebreide free-weight zone of juist werkt aan je conditie, je vindt hier alles wat je zoekt. Ervaar de ultieme vrijheid om op jouw eigen tempo je persoonlijke sportdoelen te bereiken.</p>
+                            <p>Kom trainen in onze ruime en moderne fitnessruimte, voorzien van de allernieuwste apparatuur. Of je focus nu ligt op zware krachttraining in de free-weight zone of het verbeteren van je conditie, wij hebben alles in huis. Ervaar de vrijheid om jouw persoonlijke sportdoelen te behalen!</p>
                         </div>
                     </div>
                 </div>
@@ -36,11 +36,11 @@ function AanbodOverzicht() {
 
                     <div className="aanbodinfo">
                         <div className="linkerkant">
-                            <h3 className="titel" style={{ fontSize: "23px" }}>Groepslessen</h3>
+                            <h3 className="titel" style={{ fontSize: "20px", padding: "0px 10px" }}>Groepslessen</h3>
                             <Link className="button" to="/aanbod/groepslessen">Bekijk details</Link>
                         </div>
                         <div className="rechterkant">
-                            <p>Ontdek de perfecte balans tussen inspanning en ontspanning met ons diverse en uitdagende lesaanbod. Van rustgevende Yoga-sessies tot energieke Zumba-workouts, er is altijd wel een les die perfect bij jouw behoeftes past. Laat je meeslepen door de groepsdynamiek en ervaar hoe samen sporten met onze topinstructeurs je enorm zal motiveren!</p>
+                            <p>Ontdek de perfecte balans tussen ontspanning en inspanning met ons diverse lesaanbod. Van rustgevende Yoga tot intensieve Zumba, er is altijd een groepsles die bij jouw voorkeur past. Laat je motiveren door de sterke groepsdynamiek en onze enthousiaste topinstructeurs!</p>
                         </div>
                     </div>
                 </div>
@@ -52,11 +52,11 @@ function AanbodOverzicht() {
 
                     <div className="aanbodinfo">
                         <div className="linkerkant">
-                            <h3 className="titel" style={{ fontSize: "23px" }}>Kickboksen</h3>
+                            <h3 className="titel" style={{ fontSize: "20px", padding: "0px 10px" }}>Kickboksen</h3>
                             <Link className="button" to="/aanbod/kickboksen">Bekijk details</Link>
                         </div>
                         <div className="rechterkant">
-                            <p>Verleg elke training je grenzen, bouw een ijzersterke conditie op en verbeter je techniek tijdens onze professionele kickbokstrainingen. Of je nu een beginner bent of al vergevorderd, iedereen is welkom om op zijn eigen niveau uitgedaagd te worden. Werk in een veilige en respectvolle omgeving samen aan de sterkste versie van jezelf.</p>
+                            <p>Verleg je grenzen, bouw een ijzersterke conditie op en verbeter je techniek bij onze professionele kickbokstrainingen. Of je nu een beginner bent of al vergevorderd, iedereen wordt op zijn eigen niveau uitgedaagd. Train samen in een veilige, respectvolle omgeving!</p>
                         </div>
                     </div>
                 </div>

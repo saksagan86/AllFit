@@ -9,10 +9,12 @@ import LocatiesPage from './pages/LocatiesPage.jsx'
 import NotFoundPage from './pages/NotFoundPage.jsx'
 import AanbodOverzicht from './Components/AanbodOverzicht';
 import DetailPagina from './Pages/DetailPagina'; 
+import ScrollNaarBoven from './Components/ScrollNaarBoven';
 
 function App() {
     return (
         <div>
+            <ScrollNaarBoven /> 
             <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto:wght@700&display=swap" rel="stylesheet"></link>
             <Navbar></Navbar>
             <Routes>

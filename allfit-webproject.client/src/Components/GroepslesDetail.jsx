@@ -2,85 +2,37 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import groepslesaanbod from '../data/groepslesaanbod';
 
 function GroepslesDetail() {
     return (
         <div>
 
-                <div className="detail-kaarten">
-
-                    {/* Detail Kaart 1 */}
-                    <div className="detail-kaart">
-                        <img className="detail-foto" src="/images/zumba.jpg" alt="Zumba" />
-
-                        <div className="detail-info">
-                            <h3 className="titel" style={{margin: "0 0" }}>Zumba</h3>
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
-                        </div>
-                    </div>
-
-                    {/* Detail Kaart 2 */}
-                    <div className="detail-kaart">
-                        <img className="detail-foto" src="/images/yoga.jpg" alt="Yoga" />
-
-                        <div className="detail-info">
-                            <h3 className="titel" style={{margin: "0 0" }}>Yoga</h3>
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
-                        </div>
-                    </div>
-
-                    {/* Detail Kaart 3 */}
-                    <div className="detail-kaart">
-                        <img className="detail-foto" src="/images/hiit.jpg" alt="HIIT" />
-
-                        <div className="detail-info">
-                            <h3 className="titel" style={{margin: "0 0" }}>HIIT</h3>
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
-                        </div>
-                    </div>
-
-                    {/* Detail Kaart 4 */}
-                    <div className="detail-kaart">
-                        <img className="detail-foto" src="/images/buikspierkwartier.jpg" alt="Buikspierkwartier" style={{ objectPosition: "85%" }} />
-
-                        <div className="detail-info">
-                            <h3 className="titel" style={{margin: "0 0" }}>Buikspierkwartier</h3>
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
-                        </div>
-                    </div>
-
-                    {/* Detail Kaart 5 */}
-                    <div className="detail-kaart">
-                        <img className="detail-foto" src="/images/circuittraining.jpg" alt="Circuittraining" />
-
-                        <div className="detail-info">
-                            <h3 className="titel" style={{margin: "0 0" }}>Circuittraining</h3>
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
-                        </div>
-                   </div>
-            </div>
-
-
             <div className="introductie">
 
                 <div className="detail-introductie">
 
+                    <h2 className="titelaanbodoverzicht" style={{ textAlign: "start" }}>Ontdek onze Groepslessen</h2>
+
+                    <p>Blijf gemotiveerd met onze energieke groepslessen.
+                        Van ontspannende sessies tot intensieve workouts, voor elk niveau.</p>
+
                     <ul style={{ listStyleType: "none", paddingLeft: "0px", margin: "0" }}>
                         <li style={{ marginBottom: "15px" }}>
-                            <FontAwesomeIcon icon={faCheck} style={{ color: "#FF8971", marginRight: "12px", fontSize: "22px" }} />
+                            <FontAwesomeIcon icon={faCheck} className="voordeel-icon" />
                             Meerdere lessen per dag
                         </li>
                         <li style={{ marginBottom: "15px" }}>
-                            <FontAwesomeIcon icon={faCheck} style={{ color: "#FF8971", marginRight: "12px", fontSize: "22px" }} />
+                            <FontAwesomeIcon icon={faCheck} className="voordeel-icon" />
                             Leukste trainers van de stad
                         </li>
                         <li style={{ marginBottom: "15px" }}>
-                            <FontAwesomeIcon icon={faCheck} style={{ color: "#FF8971", marginRight: "12px", fontSize: "22px" }} />
+                            <FontAwesomeIcon icon={faCheck} className="voordeel-icon" />
                             Voor elk niveau
                         </li>
                         <li>
-                            <FontAwesomeIcon icon={faCheck} style={{ color: "#FF8971", marginRight: "12px", fontSize: "22px" }} />
-                             Sportieve en gezellige sfeer
+                            <FontAwesomeIcon icon={faCheck} className="voordeel-icon" />
+                            Sportieve en gezellige sfeer
                         </li>
                     </ul>
 
@@ -88,10 +40,34 @@ function GroepslesDetail() {
 
                 <div className="foto-container">
                     <img className="foto-introductie" src="/images/groepslestrainers.jpg" alt="Groepsles Trainers" />
-                    <p style={{ fontsize: "14px" }}>AllFit groepsles trainers</p>
+                    <p>AllFit groepsles trainers</p>
                 </div>
 
             </div>
+
+            <div className="detail-kaarten">
+
+                {groepslesaanbod?.map((les) => (
+                    <div key={les.id} className="detail-kaart">
+                        <img className="detail-foto" src={les.image} alt={`${les.titel} foto`} />
+
+                        <div className="detail-info">
+
+                            <h3 className="titel" style={{ margin: "0 0" }}>{les.titel}</h3>
+
+                            <div className="les-specificaties">
+                                <p><strong>Trainer: </strong>{les.trainer}</p>
+                                <p><strong>Niveau: </strong>{les.niveau}</p>
+                                <p><strong>Duur: </strong>{les.duur} minuten</p>
+                            </div>
+
+                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+
         </div>
     );
 }
