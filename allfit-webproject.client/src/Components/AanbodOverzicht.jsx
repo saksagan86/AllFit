@@ -1,16 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import locatiesData from '../data/locations';
+import HuidigeSportschool from './HuidigeSportschool';
+
 
 function AanbodOverzicht() {
+    const routerLocation = useLocation();
+
+    const [gekozenLocatie, setGekozenLocatie] = useState('');
+
+    useEffect(() => {
+        if (routerLocation.state?.selectedLocation) {
+            setGekozenLocatie(routerLocation.state.selectedLocation);
+        }
+    }, [routerLocation.state]);
+
+
+
+
     return (
         <div className="aanbod-container">
 
-            {/* Titel Aanbodoverzicht */}
-            <div className="titelaanbodoverzicht">
-                <h2 style={{ marginBottom:"5px" }}>Ontdek ons Sportaanbod</h2>
-                <div className="lijntje"></div>
-            </div>
+            <HuidigeSportschool locaties={locatiesData} geselecteerdeLocatie={gekozenLocatie} alsLocatieVerandert={setGekozenLocatie} />
 
+                <div className="titelaanbodoverzicht" style={{ marginTop: "0px", marginBottom: "10px" }}>
+                    <h2 style={{ marginTop: "0px", marginBottom: "5px" }}>Ontdek ons Sportaanbod</h2>
+                    <div className="lijntje"></div>
+                </div>
             <div className="aanbod-kaarten">
 
                 {/* Kaart 1: Fitness */}
@@ -62,8 +78,9 @@ function AanbodOverzicht() {
                 </div>
 
             </div>
-        </div>
+            </div>
+
 
     );
 }
-    export default AanbodOverzicht;
+export default AanbodOverzicht;
