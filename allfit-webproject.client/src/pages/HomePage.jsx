@@ -1,6 +1,6 @@
 import ScrollBlock from "../Components/ScrollBlock";
 import InfoBlock from "../Components/infoBlock"
-import Navbar from "../components/Navbar";
+import Navbar from "../Components/Navbar";
 import AanbodOverzicht from "../Components/AanbodOverzicht";
 import LocationCard from "../Components/LocationCard";
 import locations from '../data/locations';
