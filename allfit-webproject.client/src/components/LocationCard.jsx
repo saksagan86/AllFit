@@ -1,3 +1,6 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+
 function LocationCard({ location }) {
     return (
         <article className="location-card">
@@ -26,6 +29,12 @@ function LocationCard({ location }) {
                     ))}
                 </ul>
             </section>
+
+
+            <Link to="/aanbod" state={{ selectedLocation: location.city }} className="button" style={{ marginTop: "20px", display: "inline-block" }}>
+                Bekijk ons aanbod
+            </Link>
+
         </article>
     )
 }
