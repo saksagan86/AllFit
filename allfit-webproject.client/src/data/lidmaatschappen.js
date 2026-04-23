@@ -8,7 +8,7 @@ const lidmaatschappen =
             "lidmaatschapgeld": 39.99,
             "duur": "1 maand",
             "opzegtermijn": "1 maand",
-            "beschrijving": "Geen toegang tussen 17:00 en 20:00 uur"
+            "beschrijving": "Geen toegang tussen 17:00 & 20:00u"
         },
         {
             "id": 2,
@@ -18,7 +18,7 @@ const lidmaatschappen =
             "lidmaatschapgeld": 34.99,
             "duur": "3 maanden",
             "opzegtermijn": "1 maand",
-            "beschrijving": "Geen toegang tussen 17:00 en 20:00 uur"
+            "beschrijving": "Geen toegang tussen 17:00 & 20:00u"
         },
         {
             "id": 3,
@@ -28,7 +28,7 @@ const lidmaatschappen =
             "lidmaatschapgeld": 31.99,
             "duur": "6 maanden",
             "opzegtermijn": "1 maand",
-            "beschrijving": "Geen toegang tussen 17:00 en 20:00 uur"
+            "beschrijving": "Geen toegang tussen 17:00 & 20:00u"
         },
         {
             "id": 4,
@@ -38,7 +38,7 @@ const lidmaatschappen =
             "lidmaatschapgeld": 29.99,
             "duur": "12 maanden",
             "opzegtermijn": "1 maand",
-            "beschrijving": "Geen toegang tussen 17:00 en 20:00 uur"
+            "beschrijving": "Geen toegang tussen 17:00 & 20:00u"
         },
 
         {
