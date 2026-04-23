@@ -44,11 +44,22 @@ function Navbar() {
           <NavLink to="/locaties" className={getLinkClass} onClick={closeMenu}>
             Locaties
           </NavLink>
+                  <div className="dropdown-container" onMouseEnter={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+                      <span style={{ userSelect: "none"}} onClick={() => setDropdownOpen(!dropdownOpen)}>Aanbod ▾</span>
 
-          <NavLink to="/aanbod" className={getLinkClass} onClick={closeMenu}>
-            Aanbod
-          </NavLink>
+                      {dropdownOpen && (
+                          <div className="dropdown-menu">
+                              {locations.map((location) => {
 
+                                  return (
+                                      <NavLink key={location.id} to="/aanbod" state={{ selectedLocation: location.city }} className="dropdown-item" onClick={closeMenu}>
+                                          {location.name}
+                                      </NavLink>
+                                  );
+                              })}
+                          </div>
+                      )}
+                  </div>
           <NavLink to="/contact" className={getLinkClass} onClick={closeMenu}>
             Contact
           </NavLink>

@@ -3,6 +3,7 @@ import locations from '../data/locations'
 import LocationsMap from "../Components/LocationsMap";
 
 
+
 function LocatiesPage() {
     return (
         <main className="locations-page">

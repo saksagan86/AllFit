@@ -5,7 +5,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './Components/Navbar.jsx'
 import ProtectedRoute from './Components/ProtectedRoute.jsx';
 import ScrollNaarBoven from './Components/ScrollNaarBoven';
-
+import InschrijfPage from './Pages/InschrijfPage'; 
 import HomePage from './Pages/HomePage.jsx'
 import ContactPage from './Pages/ContactPage.jsx'
 import LocatiesPage from './Pages/LocatiesPage.jsx'
@@ -34,6 +34,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/aanbod" element={<AanbodOverzicht />} />
         <Route path="/aanbod/:sportNaam" element={<DetailPagina />} />
+        <Route path="/inschrijven" element ={<InschrijfPage/>}/>
         <Route path="/login" element={<LoginPage />} />
         <Route
           path="/account"
