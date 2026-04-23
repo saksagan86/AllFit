@@ -3,10 +3,9 @@ import InfoBlock from "../Components/infoBlock"
 import Navbar from "../Components/Navbar";
 import AanbodOverzicht from "../Components/AanbodOverzicht";
 import LocationCard from "../Components/LocationCard";
-import locations from '../data/locations';
-import LidmaatschapOverzicht from "../Components/LidmaatschapOverzicht"
 import LocatiesPage from "./LocatiesPage";
 import LocationsMap from "../Components/LocationsMap";
+import locations from '../data/locations'
 
 function HomePage() {
     const allFitInfo = [
@@ -16,7 +15,7 @@ function HomePage() {
     ];
 
     return (
-        <main>
+        <main className="page-content">
             <ScrollBlock
                 items={allFitInfo}></ScrollBlock>
             <section className="locations-grid">
@@ -24,7 +23,8 @@ function HomePage() {
                     <LocationCard key={location.id} location={location} />
                 ))}
             </section>
-            <LidmaatschapOverzicht></LidmaatschapOverzicht>
+            <AanbodOverzicht></AanbodOverzicht>
+            {/*<Lidmaatschappen></Lidmaatschappen>*/}
         </main>
   );
 }
