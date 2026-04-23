@@ -154,7 +154,79 @@ ul {
     .location-section ul {
         margin: 0;
         padding-left: 1.2rem;
-    }
+}
+.page-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 480px;
+  background: #f3f3f3;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.form-group input:focus {
+  outline: 2px solid #3dc2c7;
+  outline-offset: 2px;
+}
+
+.auth-button {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  background-color: #3dc2c7;
+  color: #333333;
+}
+
+.form-error {
+  color: #c0392b;
+  margin-bottom: 1rem;
+}
+
+.auth-note {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #555;
+}
+
+.account-details p {
+  margin-bottom: 0.5rem;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+}
+    
 
 @media (max-width: 768px) {
     .hamburger {

@@ -2,5 +2,7 @@
 {
     public class Kickboks : Aanbod
     {
+        public string doelgroep { get; set; }
     }
 }
+

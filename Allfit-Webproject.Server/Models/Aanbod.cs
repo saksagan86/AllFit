@@ -14,7 +14,11 @@ namespace Allfit_Webproject.Server.Models
     {
         public int id { get; set; }
         public string naam { get; set; }
-        //public Sportschool sportschool;
+
+        //list met sportscholen
+        public string image { get; set; }
+        public Boolean extraBegeleiding { get; set; }
+        public string beschrijvingBegeleiding { get; set; }
 
 
 
