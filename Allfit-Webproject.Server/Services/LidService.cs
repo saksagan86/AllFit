@@ -30,11 +30,13 @@ public class LidService : ILidService
         if (existing != null)
             throw new Exception("Email bestaat al");
 
+        var gehashedWachtwoord = BCrypt.Net.BCrypt.HashPassword(dto.Wachtwoord);
+
         var lid = new Lid
         {
             naam = dto.Naam,
             email = dto.Email,
-            wachtwoord = dto.Wachtwoord,
+            wachtwoord = gehashedWachtwoord,
             telefoonnummer = dto.Telefoonnummer,
             geboortedatum = dto.Geboortedatum,
             adres = dto.Adres,
