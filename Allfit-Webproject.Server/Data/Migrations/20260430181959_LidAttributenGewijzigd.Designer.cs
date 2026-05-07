@@ -3,6 +3,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260430181959_LidAttributenGewijzigd")]
+    partial class LidAttributenGewijzigd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,7 +128,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("wachtwoord")
+                    b.Property<string>("wacthwoord")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -136,45 +139,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasDiscriminator().HasValue("Gebruiker");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Lidmaatschap", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Beschrijving")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Duur")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Inschrijfgeld")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Lidmaatschapgeld")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Naam")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Opzegtermijn")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Lidmaatschap");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Sportschool", b =>
@@ -257,9 +221,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     b.Property<bool>("isActief")
                         .HasColumnType("bit");
-
-                    b.Property<int>("lidmaatschapId")
-                        .HasColumnType("int");
 
                     b.Property<string>("postcode")
                         .IsRequired()

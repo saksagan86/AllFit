@@ -10,7 +10,7 @@ namespace Allfit_Webproject.Server.Data
         {
         }
 
-        public DbSet<Lid> Lidmaatschappen { get; set; }
+        public DbSet<Lid> Lid { get; set; }
         public DbSet<Aanbod> Aanbod { get; set; }
         public DbSet<Groepsles> Groepslessen { get; set; }
         public DbSet<Fitness> FitnessAanbod { get; set; }
@@ -19,5 +19,6 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<Faciliteit> Faciliteiten { get; set; }
         public DbSet<ContactFormulier> ContactFormulieren { get; set; }
         public DbSet<Gebruiker> Gebruiker { get; set; }
+        public DbSet<Lidmaatschap> Lidmaatschap { get; set; }
     }
 }

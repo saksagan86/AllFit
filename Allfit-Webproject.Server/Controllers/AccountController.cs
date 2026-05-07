@@ -22,10 +22,10 @@ namespace Allfit_Webproject.Server.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
-            var user = _db.Lidmaatschappen.SingleOrDefault(u => u.email == dto.Email);
+            var user = _db.Lid.SingleOrDefault(u => u.email == dto.Email);
             if (user == null) return Unauthorized("Fout e-mail wachtwoord combinatie.");
 
-            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.wacthwoord))
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.wachtwoord))
                 return Unauthorized("Fout e-mail wachtwoord combinatie.");
 
             var token = _tokenService.CreateToken(user.id.ToString(), user.email);

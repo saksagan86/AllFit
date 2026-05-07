@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "allfit-webproject.client\\allfit-webproject.client.esproj",
+        "Action": "Start",
+        "DebugTarget": "localhost (Chrome)"
+      },
+      {
+        "Path": "Allfit-Webproject.Server\\Allfit-Webproject.Server.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]
