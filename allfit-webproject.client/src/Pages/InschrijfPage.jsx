@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, redirect } from 'react-router-dom';
 import GegevensBox from '../Components/GegevensBox';
 import LidmaatschapKaart from '../Components/LidmaatschapKaart';
 
@@ -56,16 +56,32 @@ function InschrijfPage() {
             (value) => value && value.trim() !== ""
         );
 
-        if (!alleVeldenIngevuld || !akkoord) {
-            setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
-            return;
-        }
+        //if (!alleVeldenIngevuld || !akkoord) {
+        //    setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
+        //    console.log("help")
+        //    return;
+        //}
 
         // wachtwoorden velden controleren nog
 
         setError("");
-        // Hier kunnen we nog een API maken
-        navigate('/aanbod');
+
+        // Hier api call naar backend naar mollie
+        console.log("run fetch")
+        fetch("api/payment/request", {
+            method: "GET"
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    throw new Error('Payment failed')
+                }
+                return res.json();
+            }).then((data) => {
+                console.log(data.req.paymentResponse.links.checkout.href)
+                window.open(data.req.paymentResponse.links.checkout.href)
+            });
+
+        //navigate('/aanbod');
     };
 
     return (
