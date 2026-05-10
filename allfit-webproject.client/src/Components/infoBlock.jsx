@@ -1,15 +1,15 @@
 function InfoBlock({ title, description, foto_url }) {
     return (
-        <div class='block'>
-            <img src={foto_url} class='block-foto'></img>
-            <div class='block-info'>
+        <div className='block'>
+            <img src={foto_url} className='block-foto'></img>
+            <div className='block-info'>
                 <h2>
                     {title}
                 </h2>
                 <p>
                     {description}
                 </p>
-                <button class='button'>
+                <button className='button'>
                     Proefles aanvragen!
                 </button>
             </div>

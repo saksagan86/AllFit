@@ -19,16 +19,16 @@ function ScrollBlock({ items}) {
 
     let item = items[index];
     return (
-        <div class="panelholder">
+        <div className="panelholder">
             {item}
-            <div class='scroll-bar'>
-                <button class='button' onClick={handlePrev}>
+            <div className='scroll-bar'>
+                <button className='button' onClick={handlePrev}>
                     Previous
                 </button>
                 <p>
                     {index + 1} / {items.length}
                 </p>
-                <button class='button' onClick={handleNext}>
+                <button className='button' onClick={handleNext}>
                     Next
                 </button>
             </div>

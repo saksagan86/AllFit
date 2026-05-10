@@ -3,6 +3,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507160055_FaciliteitGewijzigd")]
+    partial class FaciliteitGewijzigd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,19 +32,17 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("BeschrijvingBegeleiding")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<bool>("ExtraBegeleiding")
-                        .HasColumnType("bit");
+                    b.Property<string>("beschrijvingBegeleiding")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SportschoolId")
-                        .HasColumnType("int");
+                    b.Property<bool>("extraBegeleiding")
+                        .HasColumnType("bit");
 
                     b.Property<string>("image")
                         .IsRequired()

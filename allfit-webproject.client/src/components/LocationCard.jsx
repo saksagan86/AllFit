@@ -4,19 +4,21 @@ import { Link } from 'react-router-dom';
 function LocationCard({ location }) {
     return (
         <article className="location-card">
-            <h2>{location.name}</h2>
-            <p className="location-city">{location.city}</p>
+            <h2>{location.naam}</h2>
+            <p className="location-city">{location.stad}</p>
 
             <section className="location-section">
                 <h3>Adres</h3>
-                <p>{location.address}</p>
+                <p>{location.adres}</p>
             </section>
 
             <section className="location-section">
                 <h3>Openingstijden</h3>
                 <ul>
-                    {location.openingHours.map((hours, index) => (
-                        <li key={index}>{hours}</li>
+                    {location.openingstijden.map((openingstijd, index) => (
+                        <li key={index}>
+                            {openingstijd.dag}: {openingstijd.tijdOpen} - {openingstijd.tijdSluit}
+                        </li>
                     ))}
                 </ul>
             </section>
@@ -24,16 +26,18 @@ function LocationCard({ location }) {
             <section className="location-section">
                 <h3>Faciliteiten</h3>
                 <ul>
-                    {location.facilities.map((facility, index) => (
-                        <li key={index}>{facility}</li>
+                    {location.faciliteiten.map((facility, index) => (
+                        <li key={index}>{facility.naam}</li>
                     ))}
                 </ul>
             </section>
 
-
-            <Link to="/aanbod" state={{ selectedLocation: location.city }} className="button" style={{ marginTop: "20px", display: "inline-block" }}>
+            <div className="location-button-wrapper">
+            <Link to="/aanbod" state={{ selectedLocationId: location.id }} className="button">
                 Bekijk ons aanbod
-            </Link>
+                </Link>
+            </div>
+           
 
         </article>
     )

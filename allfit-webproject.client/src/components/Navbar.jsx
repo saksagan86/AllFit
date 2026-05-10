@@ -1,7 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import locations from '../data/locations'
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
@@ -19,6 +18,35 @@ function Navbar() {
         closeMenu();
         navigate('/');
     }
+
+    const [sportscholen, setLocations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchSportscholen = async () => {
+            try {
+
+                const response = await fetch("https://localhost:7093/api/sportschool/navbar");
+                if (!response.ok) {
+                    throw new Error("Kan sportscholen niet ophalen");
+                }
+                const data = await response.json();
+                setLocations(data);
+
+            } catch (err) {
+
+                setError(err.message);
+
+            } finally {
+
+                setLoading(false);
+            }
+        };
+
+        fetchSportscholen();
+
+    }, []);
 
     return (
         <header className="navbar">
@@ -60,16 +88,16 @@ function Navbar() {
 
                         {dropdownOpen && (
                             <div className="dropdown-menu">
-                                {locations.map((location) => {
+                                {sportscholen.map((sportschool) => {
                                     return (
                                         <NavLink
-                                            key={location.id}
+                                            key={sportschool.id}
                                             to="/aanbod"
-                                            state={{ selectedLocation: location.city }}
+                                            state={{ selectedLocationId: sportschool.id }}
                                             className="dropdown-item"
                                             onClick={closeMenu}
                                         >
-                                            {location.name}
+                                            {sportschool.naam}
                                         </NavLink>
                                     );
                                 })}
