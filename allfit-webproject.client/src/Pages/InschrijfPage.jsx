@@ -56,11 +56,11 @@ function InschrijfPage() {
             (value) => value && value.trim() !== ""
         );
 
-        //if (!alleVeldenIngevuld || !akkoord) {
-        //    setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
-        //    console.log("help")
-        //    return;
-        //}
+        if (!alleVeldenIngevuld || !akkoord) {
+            setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
+            console.log("help")
+            return;
+        }
 
         // wachtwoorden velden controleren nog
 
