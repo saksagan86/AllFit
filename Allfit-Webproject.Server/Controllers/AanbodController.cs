@@ -1,26 +1,40 @@
 ﻿using Allfit_Webproject.Server.Models;
+using Allfit_Webproject.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Allfit_Webproject.Server.Controllers
 {
 
     [ApiController]
-    [Route("api/[controller]")]
-    public class AanbodController : Controller
+    [Route("api/sportscholen/{sportschoolId}/aanbod")]
+    public class AanbodController : ControllerBase
     {
+        private readonly IAanbodService _service;
 
-        [HttpGet]
-        public IEnumerable<Aanbod> GetAanbod()
+        public AanbodController(IAanbodService service) {
+
+            _service = service;
+        }
+
+        [HttpGet("fitness")]
+        public async Task<IActionResult> GetFitness(int sportschoolId)
         {
-            // Tijdelijke mock data: we simuleren wat de database straks gaat doen
-            var groepsles = new Groepsles("Beginners", "45 minuten");
+            var result = await _service.GetFitnessAsync(sportschoolId);
+            return Ok(result);
+        }
 
-            // Je zou hier ook Fitness en Kickboks objecten aanmaken
-            var fitness = new Fitness();
-            var kickboks = new Kickboks();
+        [HttpGet("groepslessen")]
+        public async Task<IActionResult> GetGroepsles(int sportschoolId)
+        {
+            var result = await _service.GetGroepslesAsync(sportschoolId);
+            return Ok(result);
+        }
 
-            // We sturen een lijst terug met al het aanbod
-            return new List<Aanbod> { groepsles, fitness, kickboks };
+        [HttpGet("kickboksen")]
+        public async Task<IActionResult> GetKickboksen(int sportschoolId)
+        {
+            var result = await _service.GetKickboksenAsync(sportschoolId);
+            return Ok(result);
         }
     }
 }

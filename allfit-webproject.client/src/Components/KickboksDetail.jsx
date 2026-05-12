@@ -2,9 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import kickbokslessen from '../data/kickboksaanbod';
 
-function KickboksDetail({ lessen }) {
+function KickboksDetail({ aanbod }) {
     return (
         <div>
 
@@ -47,13 +46,13 @@ function KickboksDetail({ lessen }) {
 
             <div className="detail-kaarten">
 
-                {kickbokslessen?.map((les) => (
+                {aanbod?.map((les) => (
                     <div key={les.id} className="detail-kaart">
 
-                        <img className="detail-foto" src={les.image} alt={`${les.titel} foto`}/>
+                        <img className="detail-foto" src={les.image} alt={`${les.naam} foto`}/>
 
                         <div className="detail-info">
-                            <h3 className="titel" style={{ margin: "0 0" }}>{les.titel}</h3>
+                            <h3 className="titel" style={{ margin: "0 0" }}>{les.naam}</h3>
 
                             <p style={{ fontSize: "14px", marginTop: "0" }}>{les.doelgroep}</p>
 

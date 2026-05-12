@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260507154307_DatabaseOpeningstijden")]
+    partial class DatabaseOpeningstijden
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,22 +33,17 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<string>("BeschrijvingBegeleiding")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(13)
                         .HasColumnType("nvarchar(13)");
 
-                    b.Property<bool>("ExtraBegeleiding")
+                    b.Property<string>("beschrijvingBegeleiding")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("extraBegeleiding")
                         .HasColumnType("bit");
-
-                    b.Property<int>("SportschoolId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("image")
                         .IsRequired()
@@ -57,11 +55,9 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("TrainerId");
-
                     b.ToTable("Aanbod");
 
-                    b.HasDiscriminator().HasValue("aanbod");
+                    b.HasDiscriminator().HasValue("Aanbod");
 
                     b.UseTphMappingStrategy();
                 });
@@ -95,7 +91,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("SportschoolId")
+                    b.Property<int?>("Sportschoolid")
                         .HasColumnType("int");
 
                     b.Property<string>("beschrijving")
@@ -108,7 +104,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
 
                     b.HasKey("id");
 
-                    b.HasIndex("SportschoolId");
+                    b.HasIndex("Sportschoolid");
 
                     b.ToTable("Faciliteiten");
                 });
@@ -249,7 +245,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                 {
                     b.HasBaseType("Allfit_Webproject.Server.Models.Aanbod");
 
-                    b.HasDiscriminator().HasValue("fitness");
+                    b.HasDiscriminator().HasValue("Fitness");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Groepsles", b =>
@@ -264,7 +260,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("groepsles");
+                    b.HasDiscriminator().HasValue("Groepsles");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Kickboks", b =>
@@ -275,7 +271,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("kickboks");
+                    b.HasDiscriminator().HasValue("Kickboks");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Lid", b =>
@@ -308,38 +304,14 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("lid");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Trainer", b =>
-                {
-                    b.HasBaseType("Allfit_Webproject.Server.Models.Gebruiker");
-
-                    b.Property<string>("specialisatie")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("trainer");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Aanbod", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Trainer", "trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId");
-
-                    b.Navigation("trainer");
+                    b.HasDiscriminator().HasValue("Lid");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Faciliteit", b =>
                 {
-                    b.HasOne("Allfit_Webproject.Server.Models.Sportschool", "Sportschool")
+                    b.HasOne("Allfit_Webproject.Server.Models.Sportschool", null)
                         .WithMany("alleFaciliteiten")
-                        .HasForeignKey("SportschoolId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sportschool");
+                        .HasForeignKey("Sportschoolid");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Openingstijd", b =>
