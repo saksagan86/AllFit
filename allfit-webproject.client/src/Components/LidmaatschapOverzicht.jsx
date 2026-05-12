@@ -1,11 +1,19 @@
-import React, { useState } from 'react'; 
+import React, { useState, useEffect } from 'react'; 
 import { Link } from 'react-router-dom';
-import lidmaatschappen from '../data/lidmaatschappen';
 import LidmaatschapKaart from './LidmaatschapKaart';
 
 function LidmaatschapOverzicht() {
     const [actieveTermijn, setActieveTermijn] = useState('1 maand');
+    const [lidmaatschappen, setLidmaatschappen] = useState([]);
     const clipGrootte = "clamp(20px, 6vw, 80px)";
+
+    useEffect(() => {
+        fetch('/api/lidmaatschappen')
+            .then(res => res.json())
+            .then(data => setLidmaatschappen(data))
+            .catch(err => console.error(err));
+    }, []);
+
     const gefilterdeLidmaatschappen = lidmaatschappen.filter(
         (lidmaatschap) => lidmaatschap.duur === actieveTermijn
     );

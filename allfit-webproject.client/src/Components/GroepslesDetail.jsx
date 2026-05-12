@@ -2,9 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import groepslesaanbod from '../data/groepslesaanbod';
 
-function GroepslesDetail() {
+function GroepslesDetail({ aanbod }) {
+    const lessen = aanbod ?? [];
+
     return (
         <div>
 
@@ -47,16 +48,16 @@ function GroepslesDetail() {
 
             <div className="detail-kaarten">
 
-                {groepslesaanbod?.map((les) => (
+                {lessen.map((les) => (
                     <div key={les.id} className="detail-kaart">
-                        <img className="detail-foto" src={les.image} alt={`${les.titel} foto`} />
+                        <img className="detail-foto" src={les.image} alt={`${les.naam} foto`} />
 
                         <div className="detail-info">
 
-                            <h3 className="titel" style={{ margin: "0 0" }}>{les.titel}</h3>
+                            <h3 className="titel" style={{ margin: "0 0" }}>{les.naam}</h3>
 
                             <div className="les-specificaties">
-                                <p><strong>Trainer: </strong>{les.trainer}</p>
+                                <p><strong>Trainer: </strong>{les.trainerNaam}</p>
                                 <p><strong>Niveau: </strong>{les.niveau}</p>
                                 <p><strong>Duur: </strong>{les.duur} minuten</p>
                             </div>
@@ -65,6 +66,9 @@ function GroepslesDetail() {
                         </div>
                     </div>
                 ))}
+                {lessen.length === 0 && (
+                    <p>Geen groepslessen gevonden voor deze sportschool.</p>
+                )}
             </div>
 
 
