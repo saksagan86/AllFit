@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, redirect } from 'react-router-dom';
 import GegevensBox from '../Components/GegevensBox';
 import LidmaatschapKaart from '../Components/LidmaatschapKaart';
 
@@ -85,6 +85,9 @@ function InschrijfPage() {
 
         if (!wachtwoordenGelijk) {
             setError("De wachtwoorden komen niet overeen.");
+        if (!alleVeldenIngevuld || !akkoord) {
+            setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
+            console.log("help")
             return;
         }
 
@@ -127,6 +130,24 @@ function InschrijfPage() {
         } catch (err) {
             setError(err.message);
         }
+        setError("");
+
+        // Hier api call naar backend naar mollie
+
+        fetch("api/payment/request", {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: eersteBetaling, recurringAmount: lidmaatschap.lidmaatschapgeld }),
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    throw new Error(res.json())
+                }
+                return res.json();
+            }).then((data) => {
+                window.open(data.req.paymentResponse.links.checkout.href, "_self")
+            });
+
     };
 
     return (
