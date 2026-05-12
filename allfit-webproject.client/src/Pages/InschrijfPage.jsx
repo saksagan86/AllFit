@@ -67,21 +67,21 @@ function InschrijfPage() {
         setError("");
 
         // Hier api call naar backend naar mollie
-        console.log("run fetch")
+
         fetch("api/payment/request", {
-            method: "GET"
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: eersteBetaling, recurringAmount: lidmaatschap.lidmaatschapgeld }),
         })
             .then(async (res) => {
                 if (!res.ok) {
-                    throw new Error('Payment failed')
+                    throw new Error(res.json())
                 }
                 return res.json();
             }).then((data) => {
-                console.log(data.req.paymentResponse.links.checkout.href)
-                window.open(data.req.paymentResponse.links.checkout.href)
+                window.open(data.req.paymentResponse.links.checkout.href, "_self")
             });
 
-        //navigate('/aanbod');
     };
 
     return (

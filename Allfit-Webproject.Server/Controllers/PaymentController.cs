@@ -16,8 +16,8 @@ namespace Allfit_Webproject.Server.Controllers
     {
         private readonly String MollieAPIKey = "test_nQaGWn8wW86xzwGkr7DSCeBtQ8TzkA";
 
-        [HttpGet("request")]
-        public async Task<IActionResult> RequestAsync()
+        [HttpPost("request")]
+        public async Task<IActionResult> RequestAsync([FromBody] PaymentRequestDto paymentInfo)
         {
             var sdk = new Mollie.Client(security: new Security()
             {
@@ -34,17 +34,16 @@ namespace Allfit_Webproject.Server.Controllers
             //        RedirectUri = "https://example.com/redirect",
             //    }
             //);
-
             var paymentRequest = new PaymentRequest()
             {
                 Description = "Desc",
                 Amount = new Amount()
                 {
                     Currency = "EUR",
-                    Value = "5.00",
+                    Value = paymentInfo.Amount,
                 },
-                RedirectUrl = "https://localhost:5137/account",
-                CancelUrl = "https://localhost:5137/inschrijven"
+                RedirectUrl = "http://localhost:5173/login",
+                CancelUrl = "http://localhost:5173/inschrijven"
             };
 
             var payment1 = await sdk.Payments.CreateAsync(
