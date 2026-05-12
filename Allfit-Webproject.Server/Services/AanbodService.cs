@@ -35,7 +35,9 @@ public class AanbodService : IAanbodService
             Niveau = x.niveau,
             Duur = x.duur,
             ExtraBegeleiding = x.ExtraBegeleiding,
-            BeschrijvingBegeleiding = x.BeschrijvingBegeleiding
+            BeschrijvingBegeleiding = x.BeschrijvingBegeleiding,
+            TrainerId = x.TrainerId,
+            TrainerNaam = x.trainer != null ? x.trainer.naam : null
         }).ToList();
     }
 
@@ -51,7 +53,9 @@ public class AanbodService : IAanbodService
             Image = x.image,
             Doelgroep = x.doelgroep,
             ExtraBegeleiding = x.ExtraBegeleiding,
-            BeschrijvingBegeleiding = x.BeschrijvingBegeleiding
+            BeschrijvingBegeleiding = x.BeschrijvingBegeleiding,
+            TrainerId = x.TrainerId,
+            TrainerNaam = x.trainer != null ? x.trainer.naam : null
         }).ToList();
     }
 }

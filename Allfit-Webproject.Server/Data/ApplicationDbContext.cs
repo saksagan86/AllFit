@@ -26,14 +26,20 @@ namespace Allfit_Webproject.Server.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Keep TPH discriminator values stable and lowercase to match persisted data.
             modelBuilder.Entity<Aanbod>()
                 .HasDiscriminator<string>("Discriminator")
                 .HasValue<Aanbod>("aanbod")
                 .HasValue<Fitness>("fitness")
                 .HasValue<Groepsles>("groepsles")
                 .HasValue<Kickboks>("kickboks");
+
+            modelBuilder.Entity<Gebruiker>()
+                .HasDiscriminator<string>("Discriminator")
+                .HasValue<Lid>("lid")
+                .HasValue<Trainer>("trainer");
         }
+
+
 
     }
 }

@@ -57,7 +57,7 @@ function GroepslesDetail({ aanbod }) {
                             <h3 className="titel" style={{ margin: "0 0" }}>{les.naam}</h3>
 
                             <div className="les-specificaties">
-                                <p><strong>Trainer: </strong>{les.trainer}</p>
+                                <p><strong>Trainer: </strong>{les.trainerNaam}</p>
                                 <p><strong>Niveau: </strong>{les.niveau}</p>
                                 <p><strong>Duur: </strong>{les.duur} minuten</p>
                             </div>

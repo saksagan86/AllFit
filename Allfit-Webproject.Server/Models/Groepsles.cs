@@ -5,7 +5,7 @@
 
         public string niveau { get; set; }
         public string duur { get; set; }
-        //public Trainer trainer { get; set; }
+        
 
 
     }

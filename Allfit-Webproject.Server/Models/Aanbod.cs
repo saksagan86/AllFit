@@ -18,7 +18,8 @@ namespace Allfit_Webproject.Server.Models
         public bool ExtraBegeleiding { get; set; }
         public string? BeschrijvingBegeleiding { get; set; }
         public int SportschoolId { get; set; }
-
+        public int? TrainerId { get; set; }
+        public Trainer trainer { get; set; }
 
 
     }

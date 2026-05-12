@@ -25,6 +25,7 @@ namespace Allfit_Webproject.Server.Repository
         {
             return await _context.Aanbod
                 .OfType<Groepsles>()
+                .Include(g => g.trainer)
                 .Where(a => a.SportschoolId == sportschoolId)
                 .ToListAsync();
         }
@@ -33,6 +34,7 @@ namespace Allfit_Webproject.Server.Repository
         {
             return await _context.Aanbod
                 .OfType<Kickboks>()
+                .Include(g => g.trainer)
                 .Where(a => a.SportschoolId == sportschoolId)
                 .ToListAsync();
         }

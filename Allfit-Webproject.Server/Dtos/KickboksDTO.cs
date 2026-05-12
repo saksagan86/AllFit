@@ -13,6 +13,7 @@
         public bool ExtraBegeleiding { get; set; }
 
         public string? BeschrijvingBegeleiding { get; set; }
-
+        public int? TrainerId { get; set; }
+        public string TrainerNaam { get; set; }
     }
 }
