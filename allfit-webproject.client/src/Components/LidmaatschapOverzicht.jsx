@@ -15,7 +15,7 @@ function LidmaatschapOverzicht() {
     }, []);
 
     const gefilterdeLidmaatschappen = lidmaatschappen.filter(
-        (lidmaatschap) => lidmaatschap.duur === actieveTermijn
+        (lidmaatschap) => lidmaatschap.duur == actieveTermijn.split(" ")[0]
     );
 
     return (

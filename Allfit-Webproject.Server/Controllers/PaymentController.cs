@@ -14,7 +14,13 @@ namespace Allfit_Webproject.Server.Controllers
     [Route("api/[controller]")]
     public class PaymentController : ControllerBase
     {
+        private readonly IAbonnementService _service;
         private readonly String MollieAPIKey = "test_nQaGWn8wW86xzwGkr7DSCeBtQ8TzkA";
+
+        public PaymentController(IAbonnementService service)
+        {
+            _service = service;
+        }
 
         [HttpPost("request")]
         public async Task<IActionResult> RequestAsync([FromBody] PaymentRequestDto paymentInfo)
@@ -36,7 +42,7 @@ namespace Allfit_Webproject.Server.Controllers
             //);
             var paymentRequest = new PaymentRequest()
             {
-                Description = "Desc",
+                Description = paymentInfo.Description,
                 Amount = new Amount()
                 {
                     Currency = "EUR",
@@ -50,6 +56,21 @@ namespace Allfit_Webproject.Server.Controllers
                 paymentRequest: paymentRequest
             );
 
+            try
+            {
+                AbonnementDTO abonnementDTO = new AbonnementDTO();
+                abonnementDTO.LidID = paymentInfo.LidId;
+                abonnementDTO.LidmaatschapID = paymentInfo.LidmaatschapId;
+                abonnementDTO.MollieID = payment1.PaymentResponse.Id;
+                abonnementDTO.DateStart = DateOnly.FromDateTime(DateTime.Today);
+                abonnementDTO.DateEnd = abonnementDTO.DateStart.AddMonths(paymentInfo.Duration);
+                await _service.RegisterAbonnementAsync(abonnementDTO);
+                return Ok(new { message = "Abonnement aangemaakt" });
+            }
+            catch (Exception ex) {
+                return BadRequest(new { message = ex.Message });
+            }
+            
             return Ok(new
             {
                 req = new

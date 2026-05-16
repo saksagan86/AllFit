@@ -1,5 +1,6 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
-import { useLocation, useNavigate, redirect } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GegevensBox from '../Components/GegevensBox';
 import LidmaatschapKaart from '../Components/LidmaatschapKaart';
 
@@ -71,7 +72,7 @@ function InschrijfPage() {
     const wachtwoord = (formData['wachtwoord'] || "");
     const bevestigWachtwoord = (formData['bevestig-wachtwoord'] || "");
     const wachtwoordenGelijk = wachtwoord === bevestigWachtwoord && wachtwoord.length > 0;
-    const submitDisabled = !alleVeldenIngevuld; 
+    const submitDisabled = !alleVeldenIngevuld;
 
     //Bij het klikken van submit voeren we deze methode uit
     const handleSubmit = async (e) => {
@@ -85,6 +86,7 @@ function InschrijfPage() {
 
         if (!wachtwoordenGelijk) {
             setError("De wachtwoorden komen niet overeen.");
+        }
         if (!alleVeldenIngevuld || !akkoord) {
             setError("Vul je gegevens aan en/of ga akkoord met onze algemene voorwaarden");
             console.log("help")
@@ -117,77 +119,74 @@ function InschrijfPage() {
                     lidmaatschapId: lidmaatschap?.id
                 })
             });
+            console.log(response)
 
-           
             if (!response.ok) {
                 const text = await response.text();
                 console.log("Backend error:", text);
                 throw new Error(`Registratie mislukt (${response.status})`);
             }
+            } catch (err) {
+                setError(err.message);
+            }
+            setError("");
 
-            navigate("/aanbod");
+            // Hier api call naar backend naar mollie
+            
+            fetch("api/payment/request", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: eersteBetaling, duration: lidmaatschap.duur, description: lidmaatschap.naam, lid: 2, lidmaatschap: lidmaatschap.id }),
+            })
+                .then(async (res) => {
+                    if (!res.ok) {
+                        throw new Error(res.json())
+                    }
+                    return res.json();
+                }).then((data) => {
+                    window.open(data.req.paymentResponse.links.checkout.href, "_self")
+                });
 
-        } catch (err) {
-            setError(err.message);
-        }
-        setError("");
+        };
 
-        // Hier api call naar backend naar mollie
+        return (
+            <div style={{ display: "flex", alignItems: "flex-start", gap: "40px" }}>
 
-        fetch("api/payment/request", {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ amount: eersteBetaling, recurringAmount: lidmaatschap.lidmaatschapgeld }),
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    throw new Error(res.json())
-                }
-                return res.json();
-            }).then((data) => {
-                window.open(data.req.paymentResponse.links.checkout.href, "_self")
-            });
+                <form onSubmit={handleSubmit} className="inschrijf-links" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
 
-    };
-
-    return (
-        <div style={{ display: "flex", alignItems: "flex-start", gap: "40px" }}>
-
-            <form onSubmit={handleSubmit} className="inschrijf-links" style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", flex: 1 }}>
-
-                <div className="titelaanbodoverzicht">
-                    <h2>Inschrijven</h2>
-                </div>
-
-                <GegevensBox titel="Persoonlijke Gegevens" gegevens={persoonlijkeVelden} formData={formData} onChange={handleChange} />
-
-                <GegevensBox titel="Adres Gegevens" gegevens={adresVelden} formData={formData} onChange={handleChange} />
-
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", margin: "20px 0px" }}>
-                    <div>
-                        <input type="checkbox" id="voorwaarden" checked={akkoord} onChange={(e) => { setAkkoord(e.target.checked); if (error) setError(""); if (submitted) setSubmitted(false); }}/>
-                        <label htmlFor="voorwaarden">Ik ga akkoord met de algemene voorwaarden</label>
+                    <div className="titelaanbodoverzicht">
+                        <h2>Inschrijven</h2>
                     </div>
 
-                    <div>
-                        <input type="checkbox" id="nieuwsbrief" checked={nieuwsbrief} onChange={(e) => setNieuwsbrief(e.target.checked)} />
-                        <label htmlFor="nieuwsbrief">Ik wil de nieuwsbrief graag ontvangen</label>
+                    <GegevensBox titel="Persoonlijke Gegevens" gegevens={persoonlijkeVelden} formData={formData} onChange={handleChange} />
+
+                    <GegevensBox titel="Adres Gegevens" gegevens={adresVelden} formData={formData} onChange={handleChange} />
+
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", margin: "20px 0px" }}>
+                        <div>
+                            <input type="checkbox" id="voorwaarden" checked={akkoord} onChange={(e) => { setAkkoord(e.target.checked); if (error) setError(""); if (submitted) setSubmitted(false); }} />
+                            <label htmlFor="voorwaarden">Ik ga akkoord met de algemene voorwaarden</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="nieuwsbrief" checked={nieuwsbrief} onChange={(e) => setNieuwsbrief(e.target.checked)} />
+                            <label htmlFor="nieuwsbrief">Ik wil de nieuwsbrief graag ontvangen</label>
+                        </div>
+
+                        <button type="submit" className="button" style={{ margin: "20px 0px", width: "175px", textAlign: "center", cursor: submitDisabled ? 'not-allowed' : 'pointer' }} disabled={submitDisabled}>
+                            Inschrijven
+                        </button>
+
+                        <p style={{ color: "red", marginTop: "10px" }}> {error} </p>
+
                     </div>
 
-                    <button type="submit" className="button" style={{ margin: "20px 0px", width: "175px", textAlign: "center",  cursor: submitDisabled ? 'not-allowed' : 'pointer' }} disabled={submitDisabled}>
-                        Inschrijven
-                    </button>
+                </form>
 
-                    <p style={{ color: "red", marginTop: "10px" }}> {error} </p>
+                <LidmaatschapKaart lid={lidmaatschap} className="inschrijf-rechts" style={{ position: "sticky", marginLeft: "auto", top: "25vh", border: "1px solid #E67862", flexShrink: "0" }} />
 
-                </div>
-
-            </form>
-
-            <LidmaatschapKaart lid={lidmaatschap} className="inschrijf-rechts" style={{ position: "sticky", marginLeft: "auto", top: "25vh", border: "1px solid #E67862", flexShrink: "0" }} />
-
-        </div>
-    );
-}
+            </div>
+        );
+    }
 
 export default InschrijfPage;
