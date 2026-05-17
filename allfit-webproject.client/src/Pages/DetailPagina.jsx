@@ -1,50 +1,104 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import FitnessDetail from '../Components/FitnessDetail';
 import KickboksDetail from '../Components/KickboksDetail';
 import GroepslesDetail from '../Components/GroepslesDetail';
 import HuidigeSportschool from '../Components/HuidigeSportschool';
-import locations from '../data/locations';
 
 function DetailPagina() {
+    const routerLocation = useLocation();
+    const [gekozenLocatieId, setGekozenLocatieId] = useState('');
+    const [sportscholen, setSportscholen] = useState([]);
+    const [aanbodData, setAanbodData] = useState([]);
     const { sportNaam } = useParams();
-    const location = useLocation();
-    const navigate = useNavigate();
-
-    // initialiseer gekozen locatie uit router state indien aanwezig,
-    // anders fallback naar eerste locatie in data (of lege string)
-    const initialLocatie = location.state?.selectedLocation || (locations && locations[0]?.city) || '';
-    const [gekozenLocatie, setGekozenLocatie] = useState(initialLocatie);
-
-    // sync als router-state buiten deze component verandert (navigatie met andere state)
-    useEffect(() => {
-        if (location.state?.selectedLocation && location.state.selectedLocation !== gekozenLocatie) {
-            setGekozenLocatie(location.state.selectedLocation);
-        }
-    }, [location.state, gekozenLocatie]);
-
-    const handleLocatieChange = (nieuweLocatie) => {
-        setGekozenLocatie(nieuweLocatie);
-
-        // update huidige history entry met nieuwe state (vervang de state, geen extra history-entry)
-        const currentPath = location.pathname + (location.search || '');
-        navigate(currentPath, { replace: true, state: { selectedLocation: nieuweLocatie } });
-    };
-
     const sportComponenten = {
-        'fitness': <FitnessDetail />,
-        'kickboksen': <KickboksDetail />,
-        'groepslessen': <GroepslesDetail />
+        'fitness': <FitnessDetail aanbod={aanbodData} />,
+        'kickboksen': <KickboksDetail aanbod={aanbodData} />,
+        'groepslessen': <GroepslesDetail aanbod={aanbodData} />
     };
+
 
     const GeselecteerdComponent = sportComponenten[sportNaam?.toLowerCase()];
+
+    useEffect(() => {
+        if (routerLocation.state?.selectedLocationId) {
+            setGekozenLocatieId(routerLocation.state.selectedLocationId);
+        }
+    }, [routerLocation.state]);
+
+    useEffect(() => {
+        const fetchSportscholen = async () => {
+
+            try {
+
+                const response = await fetch("/api/sportschool/navbar");
+
+                if (!response.ok) {
+                    throw new Error("Kan sportscholen niet ophalen");
+                }
+
+                const data = await response.json();
+
+                setSportscholen(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        fetchSportscholen();
+
+    }, []);
+
+    useEffect(() => {
+        if (sportscholen.length === 0) return;
+
+        setGekozenLocatieId((huidige) => {
+            if (huidige) return huidige;
+            return sportscholen[0].id;
+        });
+    }, [sportscholen]);
+
+    useEffect(() => {
+
+        if (!gekozenLocatieId || !sportNaam) return;
+
+        const fetchAanbod = async () => {
+
+            try {
+
+                const response = await fetch(
+                    `/api/sportscholen/${gekozenLocatieId}/aanbod/${sportNaam}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Kan aanbod niet ophalen");
+                }
+
+                const data = await response.json();
+
+                setAanbodData(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        fetchAanbod();
+
+    }, [gekozenLocatieId, sportNaam]);
+
 
     return (
         <div>
             <HuidigeSportschool
-                locaties={locations}
-                geselecteerdeLocatie={gekozenLocatie}
-                alsLocatieVerandert={handleLocatieChange}
+                locaties={sportscholen}
+                geselecteerdeLocatie={gekozenLocatieId}
+                alsLocatieVerandert={setGekozenLocatieId}
             />
 
             <div style={{ maxWidth: 1200, margin: '1rem auto', padding: '0 1rem' }}>

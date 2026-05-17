@@ -1,27 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import locatiesData from '../data/locations';
 import HuidigeSportschool from './HuidigeSportschool';
 
 
 function AanbodOverzicht() {
     const routerLocation = useLocation();
-
-    const [gekozenLocatie, setGekozenLocatie] = useState('');
+    const [gekozenLocatieId, setGekozenLocatieId] = useState('');
+    const [sportscholen, setSportscholen] = useState([]);
 
     useEffect(() => {
-        if (routerLocation.state?.selectedLocation) {
-            setGekozenLocatie(routerLocation.state.selectedLocation);
+        if (routerLocation.state?.selectedLocationId) {
+            setGekozenLocatieId(routerLocation.state.selectedLocationId);
         }
     }, [routerLocation.state]);
 
-    const huidigeLocatie = gekozenLocatie || (locatiesData && locatiesData[0]?.city) || '';
+    useEffect(() => {
+        const fetchSportscholen = async () => {
+
+            try {
+
+                const response = await fetch("https://localhost:7093/api/sportschool/navbar");
+
+                if (!response.ok) {
+                    throw new Error("Kan sportscholen niet ophalen");
+                }
+
+                const data = await response.json();
+
+                setSportscholen(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            }
+        };
+
+        fetchSportscholen();
+
+    }, []);
 
 
     return (
         <div className="aanbod-container">
 
-            <HuidigeSportschool locaties={locatiesData} geselecteerdeLocatie={gekozenLocatie} alsLocatieVerandert={setGekozenLocatie} />
+            <HuidigeSportschool locaties={sportscholen} geselecteerdeLocatie={gekozenLocatieId} alsLocatieVerandert={setGekozenLocatieId} />
 
             <div className="titelaanbodoverzicht" style={{ marginTop: "0px", marginBottom: "10px" }}>
                 <h2 style={{ marginTop: "0px", marginBottom: "5px" }}>Ontdek ons Sportaanbod</h2>
@@ -40,7 +63,7 @@ function AanbodOverzicht() {
                             <Link
                                 className="button"
                                 to="/aanbod/fitness"
-                                state={{ selectedLocation: huidigeLocatie }}
+                                state={{ selectedLocationId: gekozenLocatieId }}
                             >
                                 Bekijk details
                             </Link>
@@ -62,7 +85,7 @@ function AanbodOverzicht() {
                             <Link
                                 className="button"
                                 to="/aanbod/groepslessen"
-                                state={{ selectedLocation: huidigeLocatie }}
+                                state={{ selectedLocationId: gekozenLocatieId }}
                             >
                                 Bekijk details
                             </Link>
@@ -84,7 +107,7 @@ function AanbodOverzicht() {
                             <Link
                                 className="button"
                                 to="/aanbod/kickboksen"
-                                state={{ selectedLocation: huidigeLocatie }}
+                                state={{ selectedLocationId: gekozenLocatieId }}
                             >
                                 Bekijk details
                             </Link>

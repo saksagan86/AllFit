@@ -1,10 +1,12 @@
-using Microsoft.EntityFrameworkCore;
 using Allfit_Webproject.Server.Data;
+using Allfit_Webproject.Server.Models;
+using Allfit_Webproject.Server.Repository;
 using Allfit_Webproject.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,14 +26,20 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "http://localhost:5173", "https://localhost:5173")
+        policy.WithOrigins("http://localhost:5173", "https://localhost:5173", "http://localhost:3000")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
-// Token service
+// Services and Repositories registration
 builder.Services.AddSingleton<ITokenService, TokenService>();
+builder.Services.AddScoped<ILidService, LidService>();
+builder.Services.AddScoped<ILidRepository, LidRepository>();
+builder.Services.AddScoped<ISportschoolRepository, SportschoolRepository>();
+builder.Services.AddScoped<ISportschoolService, SportschoolService>();
+builder.Services.AddScoped<IAanbodRepository, AanbodRepository>();
+builder.Services.AddScoped<IAanbodService, AanbodService>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -80,27 +88,6 @@ app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
 
-// Seed test user and apply migrations
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    var db = services.GetRequiredService<ApplicationDbContext>();
-    // apply any pending migrations
-    db.Database.Migrate();
 
-    if (!db.Lidmaatschappen.Any())
-    {
-        db.Lidmaatschappen.Add(new Allfit_Webproject.Server.Models.Lid
-        {
-            naam = "berkay",
-            email = "b@b.com",
-            wacthwoord = BCrypt.Net.BCrypt.HashPassword("123bbb123"),
-            telefoonnummer = "0612345678",
-            geboortedatum = "1990-01-01",
-            isActief = true
-        });
-        db.SaveChanges();
-    }
-}
 
 app.Run();

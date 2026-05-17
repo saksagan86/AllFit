@@ -1,17 +1,18 @@
-function InfoBlock({ title, description, foto_url }) {
+import { Link } from 'react-router-dom';
+function InfoBlock({ title, description, foto_url, buttoninhoud, link }) {
     return (
-        <div class='block'>
-            <img src={foto_url} class='block-foto'></img>
-            <div class='block-info'>
+        <div className='block'>
+            <img src={foto_url} className='block-foto'></img>
+            <div className='block-info'>
                 <h2>
                     {title}
                 </h2>
                 <p>
                     {description}
                 </p>
-                <button class='button'>
-                    Proefles aanvragen!
-                </button>
+                <Link className='button' to={link} style={{ textAlign: "center", display:"inline-block"}}>
+                    {buttoninhoud}
+                </Link>
             </div>
         </div>
     );

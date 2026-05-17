@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import locations from '../data/locations'
 
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const { isAuthenticated, logout } = useAuth()
+    const [accountDropdownOpen, setAccountDropdownOpen] = useState(false)
     const navigate = useNavigate()
 
     const closeMenu = () => setIsOpen(false);
@@ -19,6 +19,35 @@ function Navbar() {
         closeMenu();
         navigate('/');
     }
+
+    const [sportscholen, setLocations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchSportscholen = async () => {
+            try {
+
+                const response = await fetch("https://localhost:7093/api/sportschool/navbar");
+                if (!response.ok) {
+                    throw new Error("Kan sportscholen niet ophalen");
+                }
+                const data = await response.json();
+                setLocations(data);
+
+            } catch (err) {
+
+                setError(err.message);
+
+            } finally {
+
+                setLoading(false);
+            }
+        };
+
+        fetchSportscholen();
+
+    }, []);
 
     return (
         <header className="navbar">
@@ -60,16 +89,16 @@ function Navbar() {
 
                         {dropdownOpen && (
                             <div className="dropdown-menu">
-                                {locations.map((location) => {
+                                {sportscholen.map((sportschool) => {
                                     return (
                                         <NavLink
-                                            key={location.id}
+                                            key={sportschool.id}
                                             to="/aanbod"
-                                            state={{ selectedLocation: location.city }}
+                                            state={{ selectedLocationId: sportschool.id }}
                                             className="dropdown-item"
                                             onClick={closeMenu}
                                         >
-                                            {location.name}
+                                            {sportschool.naam}
                                         </NavLink>
                                     );
                                 })}
@@ -86,19 +115,37 @@ function Navbar() {
                             Inloggen
                         </NavLink>
                     ) : (
-                        <>
-                            <NavLink to="/account" className={getLinkClass} onClick={closeMenu}>
-                                Account
-                            </NavLink>
-
-                            <button
-                                type="button"
-                                className="nav-link logout-button"
-                                onClick={handleLogout}
+                        <div
+                            className="dropdown-container"
+                            onMouseEnter={() => setAccountDropdownOpen(true)}
+                            onMouseLeave={() => setAccountDropdownOpen(false)}
+                        >
+                            <span
+                                className="nav-link dropdown-trigger"
+                                style={{ userSelect: "none", cursor: "pointer" }}
+                                onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
                             >
-                                Uitloggen
-                            </button>
-                        </>
+                                Account ▾
+                            </span>
+
+                            {accountDropdownOpen && (
+                                <div className="dropdown-menu">
+                                    <NavLink to="/account/overzicht" className="dropdown-item" onClick={closeMenu}>
+                                        Overzicht
+                                    </NavLink>
+                                    <NavLink to="/account" className="dropdown-item" onClick={closeMenu}>
+                                        Gegevens
+                                    </NavLink>
+                                    <button
+                                        type="button"
+                                        className="dropdown-item logout-button"
+                                        onClick={handleLogout}
+                                    >
+                                        Uitloggen
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </nav>
             </div>
