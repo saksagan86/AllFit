@@ -619,3 +619,13 @@ ul {
     background-color: white;
     color: #333333;
 }
+.dropdown-item.logout-button {
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+    .dropdown-item.logout-button:hover {
+        background-color: #F3E5D3;
+        color: #333;
+    }

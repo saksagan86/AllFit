@@ -6,6 +6,7 @@ function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const { isAuthenticated, logout } = useAuth()
+    const [accountDropdownOpen, setAccountDropdownOpen] = useState(false)
     const navigate = useNavigate()
 
     const closeMenu = () => setIsOpen(false);
@@ -114,19 +115,37 @@ function Navbar() {
                             Inloggen
                         </NavLink>
                     ) : (
-                        <>
-                            <NavLink to="/account" className={getLinkClass} onClick={closeMenu}>
-                                Account
-                            </NavLink>
-
-                            <button
-                                type="button"
-                                className="nav-link logout-button"
-                                onClick={handleLogout}
+                        <div
+                            className="dropdown-container"
+                            onMouseEnter={() => setAccountDropdownOpen(true)}
+                            onMouseLeave={() => setAccountDropdownOpen(false)}
+                        >
+                            <span
+                                className="nav-link dropdown-trigger"
+                                style={{ userSelect: "none", cursor: "pointer" }}
+                                onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
                             >
-                                Uitloggen
-                            </button>
-                        </>
+                                Account ▾
+                            </span>
+
+                            {accountDropdownOpen && (
+                                <div className="dropdown-menu">
+                                    <NavLink to="/account/overzicht" className="dropdown-item" onClick={closeMenu}>
+                                        Overzicht
+                                    </NavLink>
+                                    <NavLink to="/account" className="dropdown-item" onClick={closeMenu}>
+                                        Gegevens
+                                    </NavLink>
+                                    <button
+                                        type="button"
+                                        className="dropdown-item logout-button"
+                                        onClick={handleLogout}
+                                    >
+                                        Uitloggen
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     )}
                 </nav>
             </div>

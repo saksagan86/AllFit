@@ -8,5 +8,6 @@ namespace Allfit_Webproject.Server.Services
         Task<List<FitnessDTO>> GetFitnessAsync(int sportschoolId);
         Task<List<GroepslesDTO>> GetGroepslesAsync(int sportschoolId);
         Task<List<KickboksDTO>> GetKickboksenAsync(int sportschoolId);
+        Task<List<ExtraBegeleidingDTO>> GetExtraBegeleidingAsync(int sportschoolId);
     }
 }

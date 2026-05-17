@@ -36,5 +36,12 @@ namespace Allfit_Webproject.Server.Controllers
             var result = await _service.GetKickboksenAsync(sportschoolId);
             return Ok(result);
         }
+
+        [HttpGet("extrabegeleiding")]
+        public async Task<IActionResult> GetExtraBegeleiding(int sportschoolId)
+        {
+            var result = await _service.GetExtraBegeleidingAsync(sportschoolId);
+            return Ok(result);
+        }
     }
 }
