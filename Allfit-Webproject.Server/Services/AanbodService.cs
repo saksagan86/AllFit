@@ -1,4 +1,5 @@
 ﻿using Allfit_Webproject.Server.Dtos;
+using Allfit_Webproject.Server.Models;
 using Allfit_Webproject.Server.Repository;
 using Allfit_Webproject.Server.Services;
 
@@ -56,6 +57,30 @@ public class AanbodService : IAanbodService
             BeschrijvingBegeleiding = x.BeschrijvingBegeleiding,
             TrainerId = x.TrainerId,
             TrainerNaam = x.trainer != null ? x.trainer.naam : null
+        }).ToList();
+    }
+
+    public async Task<List<ExtraBegeleidingDTO>> GetExtraBegeleidingAsync(int sportschoolId)
+    {
+        var data = await _repo.GetExtraBegeleidingAsync(sportschoolId);
+
+        return data.Select(x => new ExtraBegeleidingDTO
+        {
+            Id = x.id,
+            Naam = x.naam,
+            Image = x.image,
+            BeschrijvingBegeleiding = x.BeschrijvingBegeleiding,
+            TrainerNaam = x.trainer != null ? x.trainer.naam : null,
+            SportType = x switch
+            {
+                Fitness => "fitness",
+                Groepsles => "groepsles",
+                Kickboks => "kickboks",
+                _ => "onbekend"
+            },
+            Niveau = x is Groepsles g ? g.niveau : null,
+            Duur = x is Groepsles gr ? gr.duur : null,
+            Doelgroep = x is Kickboks k ? k.doelgroep : null
         }).ToList();
     }
 }

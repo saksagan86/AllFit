@@ -14,6 +14,7 @@ import AanbodOverzicht from './Components/AanbodOverzicht';
 import DetailPagina from './Pages/DetailPagina'; 
 import LoginPage from './Pages/LoginPage.jsx';
 import AccountPage from './Pages/AccountPage.jsx';
+import ExtraoptiesPagina from './Pages/ExtraoptiesPagina';
 
 
 
@@ -34,6 +35,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/aanbod" element={<AanbodOverzicht />} />
         <Route path="/aanbod/:sportNaam" element={<DetailPagina />} />
+        <Route path="/aanbod/extraopties" element={<ExtraoptiesPagina/> } />
         <Route path="/inschrijven" element ={<InschrijfPage/>}/>
         <Route path="/login" element={<LoginPage />} />
         <Route
