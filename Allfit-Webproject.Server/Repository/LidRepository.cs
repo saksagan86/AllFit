@@ -13,17 +13,18 @@ namespace Allfit_Webproject.Server.Repository
             _context = context;
         }
 
-        public async Task AddLidAsync(Lid lid)
+        public async Task<int> AddLidAsync(Lid lid)
         {
             _context.Lid.Add(lid);
             await _context.SaveChangesAsync();
+            return lid.id;
         }
 
         public async Task<Lid?> GetByEmailAsync(string email)
         {
             return await _context.Lid.FirstOrDefaultAsync(x => x.email == email);
         }
-
+        
         public async Task<Lidmaatschap?> GetLidmaatschapById(int lidmaatschapId) {
             return await _context.Lidmaatschap.FindAsync(lidmaatschapId);
         }

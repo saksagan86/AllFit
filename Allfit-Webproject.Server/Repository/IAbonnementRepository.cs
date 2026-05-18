@@ -5,6 +5,6 @@ namespace Allfit_Webproject.Server.Repository
     public interface IAbonnementRepository
     {
         Task AddAbonnementAsync(Abonnement abo);
-        Task<Lid?> GetLid(string mollie);
+        Task<Lid?> GetByMollieIDAsync(string mollie);
     }
 }

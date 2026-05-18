@@ -19,7 +19,7 @@ namespace Allfit_Webproject.Server.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Lid?> GetLid(String mollie)
+        public async Task<Lid?> GetByMollieIDAsync(String mollie)
         {
             var lid = _context.Abonnement.FirstOrDefault(x => x.MollieID == mollie);
             return await _context.Lid.FirstOrDefaultAsync(x => x.id == lid.LidID);

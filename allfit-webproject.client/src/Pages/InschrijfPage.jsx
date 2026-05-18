@@ -119,24 +119,16 @@ function InschrijfPage() {
                     lidmaatschapId: lidmaatschap?.id
                 })
             });
-            console.log(response)
-
             if (!response.ok) {
                 const text = await response.text();
                 console.log("Backend error:", text);
                 throw new Error(`Registratie mislukt (${response.status})`);
             }
-            } catch (err) {
-                setError(err.message);
-            }
-            setError("");
-
-            // Hier api call naar backend naar mollie
-            
+            const lid = await response.json()
             fetch("api/payment/request", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: eersteBetaling, duration: lidmaatschap.duur, description: lidmaatschap.naam, lid: 2, lidmaatschap: lidmaatschap.id }),
+                body: JSON.stringify({ amount: eersteBetaling, duration: lidmaatschap.duur, description: lidmaatschap.naam, lid: lid.id, lidmaatschap: lidmaatschap.id }),
             })
                 .then(async (res) => {
                     if (!res.ok) {
@@ -146,6 +138,11 @@ function InschrijfPage() {
                 }).then((data) => {
                     window.open(data.req.paymentResponse.links.checkout.href, "_self")
                 });
+            } catch (err) {
+                setError(err.message);
+            }
+            setError("");
+            
 
         };
 

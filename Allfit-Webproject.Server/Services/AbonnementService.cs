@@ -25,5 +25,9 @@ namespace Allfit_Webproject.Server.Services
             };
             await _repo.AddAbonnementAsync(Abonnement);
         }
+        public async Task<Lid?> GetLid(String mollieID)
+        {
+            return await _repo.GetByMollieIDAsync(mollieID);
+        }
     }
 }

@@ -40,6 +40,8 @@ builder.Services.AddScoped<ISportschoolRepository, SportschoolRepository>();
 builder.Services.AddScoped<ISportschoolService, SportschoolService>();
 builder.Services.AddScoped<IAanbodRepository, AanbodRepository>();
 builder.Services.AddScoped<IAanbodService, AanbodService>();
+builder.Services.AddScoped<IAbonnementService, AbonnementService>();
+builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];

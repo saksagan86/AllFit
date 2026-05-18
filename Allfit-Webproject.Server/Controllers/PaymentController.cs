@@ -5,6 +5,7 @@ using Allfit_Webproject.Server.Dtos;
 using Mollie;
 using Mollie.Models.Components;
 using Mollie.Models.Requests;
+using Allfit_Webproject.Server.Repository;
 
 
 namespace Allfit_Webproject.Server.Controllers
@@ -22,6 +23,28 @@ namespace Allfit_Webproject.Server.Controllers
             _service = service;
         }
 
+        // Wanneer een payment change is bij mollie wordt dit gecalled. Echter unreachable door gebruik van localhost
+        [HttpPost("update")]
+        public async Task StatusUpdate([FromBody] String mollieID)
+        {
+            var lid = await _service.GetLid(mollieID);
+            var sdk = new Mollie.Client(security: new Security()
+            {
+                ApiKey = MollieAPIKey,
+            });
+            var paymentReq = new GetPaymentRequest()
+            {
+                PaymentId = mollieID
+            };
+            var payment = await sdk.Payments.GetAsync(paymentReq);
+            Console.WriteLine(payment.PaymentResponse.Status);
+            if (payment.PaymentResponse.Status == "paid")
+            {
+                Console.WriteLine("Order is paid");
+                // Update lid isactive to true.
+            }
+        }
+
         [HttpPost("request")]
         public async Task<IActionResult> RequestAsync([FromBody] PaymentRequestDto paymentInfo)
         {
@@ -30,16 +53,6 @@ namespace Allfit_Webproject.Server.Controllers
                 ApiKey = MollieAPIKey,
             });
 
-            //var res = await sdk.Oauth.GenerateAsync(
-            //    idempotencyKey: "123e4567-e89b-12d3-a456-426",
-            //    requestBody: new OauthGenerateTokensRequestBody()
-            //    {
-            //        GrantType = OauthGrantType.AuthorizationCode,
-            //        Code = "auth_...",
-            //        RefreshToken = "refresh_...",
-            //        RedirectUri = "https://example.com/redirect",
-            //    }
-            //);
             var paymentRequest = new PaymentRequest()
             {
                 Description = paymentInfo.Description,
@@ -49,7 +62,8 @@ namespace Allfit_Webproject.Server.Controllers
                     Value = paymentInfo.Amount,
                 },
                 RedirectUrl = "http://localhost:5173/login",
-                CancelUrl = "http://localhost:5173/inschrijven"
+                CancelUrl = "http://localhost:5173/inschrijven",
+                //WebhookUrl = "http://localhost:7093/api/Payment/update"
             };
 
             var payment1 = await sdk.Payments.CreateAsync(
@@ -65,7 +79,6 @@ namespace Allfit_Webproject.Server.Controllers
                 abonnementDTO.DateStart = DateOnly.FromDateTime(DateTime.Today);
                 abonnementDTO.DateEnd = abonnementDTO.DateStart.AddMonths(paymentInfo.Duration);
                 await _service.RegisterAbonnementAsync(abonnementDTO);
-                return Ok(new { message = "Abonnement aangemaakt" });
             }
             catch (Exception ex) {
                 return BadRequest(new { message = ex.Message });

@@ -12,7 +12,7 @@ public class LidService : ILidService
         _repo = repo;
     }
 
-    public async Task RegisterLidAsync(RegisterLidDTO dto)
+    public async Task<int> RegisterLidAsync(RegisterLidDTO dto)
     {
 
         if (dto.Wachtwoord != dto.BevestigWachtwoord)
@@ -48,5 +48,6 @@ public class LidService : ILidService
         };
 
         await _repo.AddLidAsync(lid);
+        return lid.id;
     }
 }

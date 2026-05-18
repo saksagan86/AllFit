@@ -23,8 +23,8 @@ namespace Allfit_Webproject.Server.Controllers
 
             try
             {
-                await _service.RegisterLidAsync(dto);
-                return Ok(new { message = "Lid aangemaakt" });
+                int lidId = await _service.RegisterLidAsync(dto);
+                return Ok(new { message = "Lid aangemaakt", id = lidId });
             }
             catch (Exception ex)
             {
