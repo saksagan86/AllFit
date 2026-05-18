@@ -41,7 +41,8 @@ namespace Allfit_Webproject.Server.Controllers
             if (payment.PaymentResponse.Status == "paid")
             {
                 Console.WriteLine("Order is paid");
-                // Update lid isactive to true.
+                lid.isActief = true;
+                await _service.UpdateLidAsync(lid);
             }
         }
 

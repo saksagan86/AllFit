@@ -7,5 +7,6 @@ namespace Allfit_Webproject.Server.Services
     {
         Task RegisterAbonnementAsync(AbonnementDTO dto);
         Task<Lid?> GetLid(String mollieID);
+        Task UpdateLidAsync(Lid lid);
     }
 }

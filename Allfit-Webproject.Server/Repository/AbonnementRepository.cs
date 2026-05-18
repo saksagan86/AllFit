@@ -24,5 +24,11 @@ namespace Allfit_Webproject.Server.Repository
             var lid = _context.Abonnement.FirstOrDefault(x => x.MollieID == mollie);
             return await _context.Lid.FirstOrDefaultAsync(x => x.id == lid.LidID);
         }
+
+        public async Task UpdateLidAsync(Lid lid)
+        {
+            _context.Lid.Update(lid);
+            await _context.SaveChangesAsync();
+        }
     }
 }

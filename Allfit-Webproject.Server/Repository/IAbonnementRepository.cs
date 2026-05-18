@@ -6,5 +6,6 @@ namespace Allfit_Webproject.Server.Repository
     {
         Task AddAbonnementAsync(Abonnement abo);
         Task<Lid?> GetByMollieIDAsync(string mollie);
+        Task UpdateLidAsync(Lid lid);
     }
 }

@@ -29,5 +29,10 @@ namespace Allfit_Webproject.Server.Services
         {
             return await _repo.GetByMollieIDAsync(mollieID);
         }
+
+        public async Task UpdateLidAsync(Lid lid)
+        {
+            await _repo.UpdateLidAsync(lid);
+        }
     }
 }
