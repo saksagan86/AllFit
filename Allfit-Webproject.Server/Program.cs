@@ -42,6 +42,8 @@ builder.Services.AddScoped<IAanbodRepository, AanbodRepository>();
 builder.Services.AddScoped<IAanbodService, AanbodService>();
 builder.Services.AddScoped<IAbonnementService, AbonnementService>();
 builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
+builder.Services.AddScoped<IFormService, FormService>();
+builder.Services.AddScoped<IFormRepo, FormRepo>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
