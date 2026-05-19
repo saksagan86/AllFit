@@ -20,7 +20,7 @@ function LidmaatschapKaart({ lid, className = "", style = {}, children }) {
                 </li>
                 <li style={{ marginBottom: "15px", fontSize: "14px", display: "flex", alignItems: "center" }}>
                     <span className="lidmaatschap-bullet oranje"></span>
-                    {lid.duur} contract
+                    {lid.duur} maanden contract
                 </li>
                 <li style={{ marginBottom: "15px", fontSize: "14px", display: "flex", alignItems: "center" }}>
                     <span className="lidmaatschap-bullet oranje"></span>

@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260516100044_AddAbonnementTable")]
+    partial class AddAbonnementTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,28 +67,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasDiscriminator().HasValue("aanbod");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Abonnement", b =>
-                {
-                    b.Property<int>("LidID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("MollieID")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateOnly>("DateEnd")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("DateStart")
-                        .HasColumnType("date");
-
-                    b.Property<int>("LidmaatschapID")
-                        .HasColumnType("int");
-
-                    b.HasKey("LidID", "MollieID");
-
-                    b.ToTable("Abonnement");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.ContactFormulier", b =>

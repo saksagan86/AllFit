@@ -4,6 +4,6 @@ namespace Allfit_Webproject.Server.Services
 {
     public interface ILidService
     {
-        Task RegisterLidAsync(RegisterLidDTO dto);
+        Task<int> RegisterLidAsync(RegisterLidDTO dto);
     }
 }
