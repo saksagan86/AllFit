@@ -36,7 +36,7 @@ function IntakeGesprek() {
 
     return (
         <div>
-            <button className='button' onClick={openForm}>Plan een gesprek!</button>
+            <button style={{ marginTop: '1em' }} className='button' onClick={openForm}>Plan een gesprek!</button>
             <PopUp showPopUp={showPopUp} closePopUp={() => setShowPopUp(false)}>
                <h2>Plan een gesprek</h2>
                 <p>Vul het formulier in om een gesprek te plannen.</p>
