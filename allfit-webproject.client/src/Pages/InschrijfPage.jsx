@@ -128,7 +128,7 @@ function InschrijfPage() {
             fetch("api/payment/request", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: eersteBetaling, duration: lidmaatschap.duur, description: lidmaatschap.naam, lid: lid.id, lidmaatschap: lidmaatschap.id }),
+                body: JSON.stringify({ amount: eersteBetaling, duration: lidmaatschap.duur, description: lidmaatschap.naam, lidId: lid.id, lidmaatschapId: lidmaatschap.id }),
             })
                 .then(async (res) => {
                     if (!res.ok) {
