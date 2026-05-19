@@ -44,7 +44,7 @@ public class LidService : ILidService
             woonplaats = dto.Woonplaats,
             postcode = dto.Postcode,
             lidmaatschapId = dto.LidmaatschapId,
-            isActief = true
+            isActief = false
         };
 
         await _repo.AddLidAsync(lid);
