@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HuidigeSportschool from '../Components/HuidigeSportschool';
 import ExtraBegeleidingDetail from '../Components/ExtraBegleidingDetail';
+import IntakeGesprek from '../Components/IntakeGesprek';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
@@ -63,7 +64,6 @@ function ExtraoptiesPagina() {
                 geselecteerdeLocatie={gekozenLocatieId}
                 alsLocatieVerandert={setGekozenLocatieId}
             />
-
             <div className="introductie">
                 <div className="detail-introductie">
                     <h2 className="titelaanbodoverzicht" style={{ textAlign: "start" }}>Ontdek onze extra optie's</h2>
@@ -85,6 +85,7 @@ function ExtraoptiesPagina() {
                             <FontAwesomeIcon icon={faCheck} className="voordeel-icon" />
                             Flexibel inpasbaar
                         </li>
+                        <IntakeGesprek></IntakeGesprek>
                     </ul>
                 </div>
                 <div className="foto-container">

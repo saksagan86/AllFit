@@ -22,6 +22,7 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<Lidmaatschap> Lidmaatschap { get; set; }
         public DbSet<Openingstijd> Openingstijden { get; set; }
         public DbSet<Abonnement> Abonnement { get; set; }
+        public DbSet<Form> Form { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
