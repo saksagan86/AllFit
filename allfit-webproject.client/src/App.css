@@ -356,7 +356,8 @@ ul {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    color: #011627
+    color: #011627;
+    z-index: 1;
 }
 
 /* Button styling */
