@@ -755,3 +755,148 @@ ul {
     flex-direction: column;
     gap: 16px;
 }
+
+.dropdown-item.logout-button:hover {
+    background-color: #F3E5D3;
+    color: #333;
+}
+
+.contact-page {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 20px;
+    color: #333333;
+}
+
+.contact-hero {
+    max-width: 760px;
+    margin-bottom: 32px;
+}
+
+.contact-eyebrow {
+    color: #3DC2C7;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+}
+
+.contact-hero h1 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    margin-bottom: 16px;
+}
+
+.contact-hero p {
+    font-size: 1.08rem;
+    line-height: 1.7;
+}
+
+.contact-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.contact-form,
+.contact-info {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group textarea {
+    border: 2px solid #d7d7d7;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font: inherit;
+    background: #F3F3F3;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.contact-submit:focus {
+    outline: 3px solid #3DC2C7;
+    outline-offset: 3px;
+}
+
+.field-error {
+    margin-top: 6px;
+    color: #b00020;
+    font-size: 0.95rem;
+}
+
+.form-feedback {
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 18px;
+    font-weight: 700;
+}
+
+.form-feedback.success {
+    background: #e8f7f4;
+    color: #175b55;
+}
+
+.form-feedback.error {
+    background: #ffe7e2;
+    color: #7a1d10;
+}
+
+.contact-submit {
+    width: 100%;
+    border: none;
+    border-radius: 999px;
+    padding: 14px 20px;
+    background: #3DC2C7;
+    color: #333333;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.contact-submit:hover {
+    filter: brightness(0.95);
+}
+
+.contact-submit:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.contact-info h2 {
+    margin-bottom: 16px;
+}
+
+.contact-info ul {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.honeypot {
+    position: absolute;
+    left: -9999px;
+}
+
+@media (max-width: 800px) {
+    .contact-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-page {
+        padding: 32px 16px;
+    }
+}
+    
