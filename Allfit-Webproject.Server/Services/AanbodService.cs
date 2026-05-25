@@ -83,4 +83,22 @@ public class AanbodService : IAanbodService
             Doelgroep = x is Kickboks k ? k.doelgroep : null
         }).ToList();
     }
+
+    public async Task<List<AanbodDTO>> GetAllAsync(int sportschoolId)
+    {
+        var data = await _repo.GetAllAanbodAsync(sportschoolId);
+
+        return data.Select(x => new AanbodDTO
+        {
+            Id = x.id,
+            Naam = x.naam,
+            SportType = x switch
+            {
+                Fitness => "fitness",
+                Groepsles => "groepsles",
+                Kickboks => "kickboks",
+                _ => "onbekend"
+            }
+        }).ToList();
+    }
 }

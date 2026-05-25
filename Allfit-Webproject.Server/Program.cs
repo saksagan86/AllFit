@@ -72,6 +72,8 @@ builder.Services.AddScoped<ILesRepository, LesRepository>();
 builder.Services.AddScoped<IInschrijvingService, InschrijfService>();
 builder.Services.AddScoped<IInschrijfRepository, InschrijvingRepository>();
 
+builder.Services.AddScoped<IFormService, FormService>();
+builder.Services.AddScoped<IFormRepo, FormRepo>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];

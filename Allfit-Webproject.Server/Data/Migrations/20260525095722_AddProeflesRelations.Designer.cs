@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525095722_AddProeflesRelations")]
+    partial class AddProeflesRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -199,59 +202,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasDiscriminator().HasValue("Gebruiker");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Inschrijving", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("ExtraBegeleiding")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LidId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LesId");
-
-                    b.HasIndex("LidId");
-
-                    b.ToTable("Inschrijvingen");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Les", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AanbodId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Datum")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxDeelnemers")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Tijd")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AanbodId");
-
-                    b.ToTable("Lessen");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Lidmaatschap", b =>
@@ -445,7 +395,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Lid");
+                    b.HasDiscriminator().HasValue("lid");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Trainer", b =>
@@ -477,36 +427,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Sportschool");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Inschrijving", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Les", "Les")
-                        .WithMany()
-                        .HasForeignKey("LesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Lid", "Lid")
-                        .WithMany()
-                        .HasForeignKey("LidId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Les");
-
-                    b.Navigation("Lid");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Les", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Aanbod")
-                        .WithMany()
-                        .HasForeignKey("AanbodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aanbod");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Openingstijd", b =>

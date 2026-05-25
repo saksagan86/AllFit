@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260519181400_IntakeForm")]
+    partial class IntakeForm
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,59 +204,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Inschrijving", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("ExtraBegeleiding")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("LesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LidId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LesId");
-
-                    b.HasIndex("LidId");
-
-                    b.ToTable("Inschrijvingen");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Les", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AanbodId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Datum")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MaxDeelnemers")
-                        .HasColumnType("int");
-
-                    b.Property<TimeSpan>("Tijd")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AanbodId");
-
-                    b.ToTable("Lessen");
-                });
-
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Lidmaatschap", b =>
                 {
                     b.Property<int>("Id")
@@ -320,41 +270,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasIndex("SportschoolId");
 
                     b.ToTable("Openingstijden");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Proefles", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LesID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SportschoolID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Telefoon")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LesID");
-
-                    b.HasIndex("SportschoolID");
-
-                    b.ToTable("Proefles");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Sportschool", b =>
@@ -445,7 +360,7 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasDiscriminator().HasValue("Lid");
+                    b.HasDiscriminator().HasValue("lid");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Trainer", b =>
@@ -479,36 +394,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.Navigation("Sportschool");
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Inschrijving", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Les", "Les")
-                        .WithMany()
-                        .HasForeignKey("LesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Lid", "Lid")
-                        .WithMany()
-                        .HasForeignKey("LidId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Les");
-
-                    b.Navigation("Lid");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Les", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Aanbod")
-                        .WithMany()
-                        .HasForeignKey("AanbodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aanbod");
-                });
-
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Openingstijd", b =>
                 {
                     b.HasOne("Allfit_Webproject.Server.Models.Sportschool", "Sportschool")
@@ -516,25 +401,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .HasForeignKey("SportschoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Sportschool");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Proefles", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Les")
-                        .WithMany()
-                        .HasForeignKey("LesID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Sportschool", "Sportschool")
-                        .WithMany()
-                        .HasForeignKey("SportschoolID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Les");
 
                     b.Navigation("Sportschool");
                 });
