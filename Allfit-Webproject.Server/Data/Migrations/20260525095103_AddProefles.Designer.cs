@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260525095103_AddProefles")]
+    partial class AddProefles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -281,14 +284,14 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LesID")
+                    b.Property<int>("Les")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SportschoolID")
+                    b.Property<int>("Sportschool")
                         .HasColumnType("int");
 
                     b.Property<string>("Telefoon")
@@ -296,10 +299,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LesID");
-
-                    b.HasIndex("SportschoolID");
 
                     b.ToTable("Proefles");
                 });
@@ -433,25 +432,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .HasForeignKey("SportschoolId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Sportschool");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Proefles", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Les")
-                        .WithMany()
-                        .HasForeignKey("LesID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Sportschool", "Sportschool")
-                        .WithMany()
-                        .HasForeignKey("SportschoolID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Les");
 
                     b.Navigation("Sportschool");
                 });

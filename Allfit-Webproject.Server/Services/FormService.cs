@@ -23,5 +23,18 @@ namespace Allfit_Webproject.Server.Services
             };
             await _repo.SaveFormAsync(form);
         }
+
+        public async Task SaveProeflesAsync(ProeflesDTO formData)
+        {
+            var proefles = new Proefles
+            {
+                Name = formData.Name,
+                Email = formData.Email,
+                Telefoon = formData.Telefoon,
+                SportschoolID = formData.SportschoolID,
+                LesID = formData.LesID
+            };
+            await _repo.SaveProeflesAsync(proefles);
+        }
     }
 }
