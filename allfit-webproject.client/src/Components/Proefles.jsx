@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import PopUp from "./PopUp";
 function Proefles() {
     const [showPopUp, setShowPopUp] = useState(false);
+    const [sentForm, setSendingForm] = useState(false);
     const [locaties, setLocaties] = useState([]);
     const [lessen, setLessen] = useState([]);
 
     function openForm() {
         setShowPopUp(true);
+        setSendingForm(false);
         fetchLocaties();
     }
     async function fetchLocaties() {
@@ -20,30 +22,31 @@ function Proefles() {
 
     async function loadLessen(sportschool) {
         if (sportschool) {
-            const res = await fetch(`https:localhost:7093/api/sportscholen/${sportschool}/aanbod/groepslessen`);
+            const res = await fetch(`https:localhost:7093/api/sportscholen/${sportschool}/aanbod/all`);
             if (!res.ok) {
                 throw new Error("Kan geen lessen vinden");
             }
             const data = await res.json();
             setLessen(data)
         }
-        console.log(`${sportschool}: ${lessen}`)
     }
 
     // Verstuurt de form met data naar de backend om daar te verwerken.
     async function sendForm(formData) {
+        setShowPopUp(false);
+        setSendingForm(true);
         try {
-            const response = await fetch("https://localhost:7093/api/proefles/submit", {
+            const response = await fetch("https://localhost:7093/api/form/proefles", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    Locatie: formData.get("locatie"),
-                    Les: formData.get("les"),
-                    Naam: formData.get("name"),
+                    Name: formData.get("name"),
                     Email: formData.get("email"),
                     Telefoon: formData.get("tel"),
+                    SportschoolID: formData.get("locatie"),
+                    LesID: formData.get("les"),
                 })
             });
             if (!response.ok) {
@@ -54,12 +57,11 @@ function Proefles() {
         } catch (err) {
             console.log(err.message);
         }
-        setShowPopUp(false)
     }
 
     return (
         <div>
-            <button style={{ marginTop: '1em' }} className='button' onClick={openForm}>Boek een proefles!</button>
+            <button style={{ marginTop: '1em' }} className='button' onClick={openForm}>{sentForm ? "Bedankt voor het boeken!" : "Boek een proefles!"}</button>
             <PopUp showPopUp={showPopUp} closePopUp={() => setShowPopUp(false)}>
                 <h2>"Boek een proefles!"</h2>
                 <p>Vul het formulier in om een gesprek te plannen.</p>
@@ -83,7 +85,7 @@ function Proefles() {
                     <label>Telefoonnummer: </label>
                     <input type="tel" name="tel" required />
                     <label>Met het versturen van de gegevens ga ik akkoord om mij te benaderen voor verdere informatie. </label>
-                    <input type="submit" value="Verstuur" />
+                    <input type="submit" value={"Verstuur"} />
                 </form>
             </PopUp>
         </div>

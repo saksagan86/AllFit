@@ -17,5 +17,11 @@ namespace Allfit_Webproject.Server.Repository
             _context.Form.Add(form);
             await _context.SaveChangesAsync();
         }
+
+        public async Task SaveProeflesAsync(Proefles proefles)
+        {
+            _context.Proefles.Add(proefles);
+            await _context.SaveChangesAsync();
+        }
     }
 }
