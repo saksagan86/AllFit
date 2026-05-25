@@ -1,6 +1,8 @@
 ﻿using Allfit_Webproject.Server.Data;
+using Allfit_Webproject.Server.Dtos;
 using Allfit_Webproject.Server.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 
 namespace Allfit_Webproject.Server.Repository
 {
@@ -27,6 +29,15 @@ namespace Allfit_Webproject.Server.Repository
         
         public async Task<Lidmaatschap?> GetLidmaatschapById(int lidmaatschapId) {
             return await _context.Lidmaatschap.FindAsync(lidmaatschapId);
+        }
+
+        public async Task<Lid?> GetLidByIdAsync(int lidId) {
+            return await _context.Lid.FirstOrDefaultAsync(l => l.id == lidId);
+        }
+
+        public async Task UpdateLidAsync(Lid updatedLid) {
+            _context.Lid.Update(updatedLid);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -22,6 +22,8 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<Lidmaatschap> Lidmaatschap { get; set; }
         public DbSet<Openingstijd> Openingstijden { get; set; }
         public DbSet<Abonnement> Abonnement { get; set; }
+        public DbSet<Les> Lessen { get; set; }
+        public DbSet<Inschrijving> Inschrijvingen { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,7 +38,7 @@ namespace Allfit_Webproject.Server.Data
 
             modelBuilder.Entity<Gebruiker>()
                 .HasDiscriminator<string>("Discriminator")
-                .HasValue<Lid>("lid")
+                .HasValue<Lid>("Lid")
                 .HasValue<Trainer>("trainer");
         }
 
