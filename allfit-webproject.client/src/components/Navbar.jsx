@@ -106,12 +106,16 @@ function Navbar() {
                         )}
                     </div>
 
+                    <NavLink to="/community" className={getLinkClass} onClick={closeMenu}>
+                        Community
+                    </NavLink>
+
                     <NavLink to="/contact" className={getLinkClass} onClick={closeMenu}>
                         Contact
                     </NavLink>
 
                     {!isAuthenticated ? (
-                        <NavLink to="/login" className={getLinkClass} onClick={closeMenu}>
+                        <NavLink to="/login" className={getLinkClass} onClick={ closeMenu}>
                             Inloggen
                         </NavLink>
                     ) : (

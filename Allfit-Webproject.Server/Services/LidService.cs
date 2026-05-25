@@ -2,6 +2,7 @@
 using Allfit_Webproject.Server.Dtos;
 using Allfit_Webproject.Server.Models;
 using Allfit_Webproject.Server.Repository;
+using System.Threading.Tasks;
 
 public class LidService : ILidService
 {
@@ -50,4 +51,40 @@ public class LidService : ILidService
         await _repo.AddLidAsync(lid);
         return lid.id;
     }
+
+    public async Task<GegevensLidDto> GetLidByIdAsync(int lidId) {
+        Lid lid = await _repo.GetLidByIdAsync(lidId);
+
+        if (lid == null) { 
+            return null;
+        }
+        
+        return new GegevensLidDto
+        {
+            Naam = lid.naam,
+            Email = lid.email,
+            Telefoonnummer = lid.telefoonnummer,
+            Adres = lid.adres,
+            Huisnummer = lid.huisnummer,
+            Postcode = lid.postcode,
+            Stad = lid.woonplaats
+        };
+    }
+
+    public async Task UpdateLidAsync(int lidId, UpdateLidDto dto)
+    {
+        var lid = await _repo.GetLidByIdAsync(lidId);
+        if (lid == null) throw new Exception("Lid niet gevonden");
+
+        lid.naam = dto.Naam;
+        lid.email = dto.Email;
+        lid.telefoonnummer = dto.Telefoonnummer;
+        lid.adres = dto.Adres;
+        lid.huisnummer = dto.Huisnummer;
+        lid.postcode = dto.Postcode;
+        lid.woonplaats = dto.Stad;
+
+        await _repo.UpdateLidAsync(lid);
+    }
+
 }
