@@ -14,7 +14,7 @@ function LoginPage() {
 
   const [error, setError] = useState('');
 
-  const from = location.state?.from?.pathname || '/account';
+  const from = location.state?.from?.pathname || '/account/overzicht';
 
   const handleChange = (event) => {
     const { name, value } = event.target;
