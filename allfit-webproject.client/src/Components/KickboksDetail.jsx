@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-function KickboksDetail({ aanbod }) {
+function KickboksDetail({ aanbod, extraBegeleiding }) {
     return (
         <div>
 
@@ -48,20 +48,25 @@ function KickboksDetail({ aanbod }) {
 
                 {aanbod?.map((les) => (
                     <div key={les.id} className="detail-kaart">
-
-                        <img className="detail-foto" src={les.image} alt={`${les.naam} foto`}/>
-
+                        <img className="detail-foto" src={les.image} alt={`${les.naam} foto`} />
                         <div className="detail-info">
                             <h3 className="titel" style={{ margin: "0 0" }}>{les.naam}</h3>
-
-                            <p style={{ fontSize: "14px", marginTop: "0" }}>{les.doelgroep}</p>
-
-                            <Link className="button" to="/aanbod/kickboksen">Inschrijven</Link>
+                            {extraBegeleiding === 'met' ? (
+                                <p style={{ fontSize: "13px", marginTop: "4px" }}>
+                                    <strong>Extra begeleiding: </strong>{les.beschrijvingBegeleiding}
+                                </p>
+                            ) : (
+                                <p style={{ fontSize: "14px", marginTop: "0" }}>{les.doelgroep}</p>
+                            )}
+                            <Link className="button" to={`/lessen/${les.id}`} state={{ naam: les.naam, extraBegeleiding: extraBegeleiding === 'met' }}>Inschrijven</Link>
                         </div>
-
                     </div>
                 ))}
             </div>
+
+            {aanbod?.length === 0 && (
+                <p>Geen kickbokslessen gevonden voor deze sportschool.</p>
+            )}
 
 
         </div>

@@ -1,8 +1,9 @@
 import React from 'react';
 
-function HuidigeSportschool({ locaties, geselecteerdeLocatie, alsLocatieVerandert }) {
+function HuidigeSportschool({ locaties, geselecteerdeLocatie, alsLocatieVerandert, children }) {
     return (
-        <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '0 5%', marginTop: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '20px', padding: '0 5%', marginTop: '20px' }}>
+            {children}
             <div>
                 <label htmlFor="locatie-select" style={{ marginRight: '10px', fontWeight: 'bold', color: '#333' }}>
                     Locatie:

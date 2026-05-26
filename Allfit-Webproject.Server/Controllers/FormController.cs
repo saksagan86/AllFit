@@ -1,8 +1,9 @@
 ﻿using Allfit_Webproject.Server.Dtos;
 using Allfit_Webproject.Server.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mail;
+using Microsoft.SqlServer.Server;
 using System.Net;
+using System.Net.Mail;
 
 namespace Allfit_Webproject.Server.Controllers
 {
@@ -19,20 +20,45 @@ namespace Allfit_Webproject.Server.Controllers
             _service = formService;
         }
 
+        [HttpPost("proefles")]
+        public async Task SubmitProefles([FromBody] ProeflesDTO formData)
+        {
+            // Write to database
+            try
+            {
+                await _service.SaveProeflesAsync(formData);
+                SendConfirmationEmail(formData.Email, formData.Name, formData.Telefoon);
+            }
+            catch (Exception ex) { 
+                Console.Error.WriteLine(ex.Message);
+            }
+        }
+
         [HttpPost("submit")]
         public async Task SubmitForm([FromBody] IntakeDTO formData)
         {
             // Write to database
-            await _service.SaveFormAsync(formData);
+            try
+            {
+                await _service.SaveFormAsync(formData);
+                SendConfirmationEmail(formData.Email, formData.Naam, formData.Telefoon);
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+            }
+        }
 
+        private void SendConfirmationEmail(String email, String naam, String telefoon)
+        {
             // Send confirmation email wegens testomgeving alleen mogelijk naar r.p.j.welleman@student.hhs.nl
             try
             {
                 MailMessage message = new MailMessage(
                     mailDomain,
-                    formData.Email,
+                    email,
                     "Bevestiging van uw aanvraag",
-                    $"Beste {formData.Naam},\n\nBedankt voor uw aanvraag. We nemen zo snel mogelijk telefonisch contact met u op via {formData.Telefoon}.\n\nMet vriendelijke groet,\nAllfit Team"
+                    $"Beste {naam},\n\nBedankt voor uw aanvraag. We nemen zo snel mogelijk telefonisch contact met u op via {telefoon}.\n\nMet vriendelijke groet,\nAllfit Team"
                     );
                 SmtpClient client = new SmtpClient("live.smtp.mailtrap.io", 587)
                 {

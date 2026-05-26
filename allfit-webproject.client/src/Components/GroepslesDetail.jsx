@@ -3,11 +3,12 @@ import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
-function GroepslesDetail({ aanbod }) {
+function GroepslesDetail({ aanbod, extraBegeleiding }) {
     const lessen = aanbod ?? [];
 
     return (
         <div>
+
 
             <div className="introductie">
 
@@ -51,18 +52,20 @@ function GroepslesDetail({ aanbod }) {
                 {lessen.map((les) => (
                     <div key={les.id} className="detail-kaart">
                         <img className="detail-foto" src={les.image} alt={`${les.naam} foto`} />
-
                         <div className="detail-info">
-
                             <h3 className="titel" style={{ margin: "0 0" }}>{les.naam}</h3>
-
-                            <div className="les-specificaties">
-                                <p><strong>Trainer: </strong>{les.trainerNaam}</p>
-                                <p><strong>Niveau: </strong>{les.niveau}</p>
-                                <p><strong>Duur: </strong>{les.duur} minuten</p>
-                            </div>
-
-                            <Link className="button" to="/aanbod/groepslessen">Inschrijven</Link>
+                            {extraBegeleiding === 'met' ? (
+                                <p style={{ fontSize: "13px", marginTop: "4px" }}>
+                                    <strong>Extra begeleiding: </strong>{les.beschrijvingBegeleiding}
+                                </p>
+                            ) : (
+                                <div className="les-specificaties">
+                                    <p><strong>Trainer: </strong>{les.trainerNaam}</p>
+                                    <p><strong>Niveau: </strong>{les.niveau}</p>
+                                    <p><strong>Duur: </strong>{les.duur} minuten</p>
+                                </div>
+                            )}
+                            <Link className="button" to={`/lessen/${les.id}`} state={{ naam: les.naam, extraBegeleiding: extraBegeleiding === 'met' }}>Inschrijven</Link>
                         </div>
                     </div>
                 ))}
