@@ -1,9 +1,7 @@
-using Allfit_Webproject.Server.Data;
 using Allfit_Webproject.Server.Dtos;
-using Allfit_Webproject.Server.Models;
+using Allfit_Webproject.Server.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
@@ -14,11 +12,11 @@ namespace Allfit_Webproject.Server.Controllers
     [Authorize]
     public class VoedingsadviesController : ControllerBase
     {
-        private readonly ApplicationDbContext _db;
+        private readonly IVoedingsadviesService _voedingsadviesService;
 
-        public VoedingsadviesController(ApplicationDbContext db)
+        public VoedingsadviesController(IVoedingsadviesService voedingsadviesService)
         {
-            _db = db;
+            _voedingsadviesService = voedingsadviesService;
         }
 
         [HttpGet("mijn-schema")]
@@ -34,61 +32,8 @@ namespace Allfit_Webproject.Server.Controllers
                 });
             }
 
-            var beschikbareDoelen = await HaalBeschikbareDoelenOp();
-
-            var gebruikerDoel = await _db.GebruikerDoelen
-                .Include(gd => gd.doel)
-                    .ThenInclude(d => d!.voedingsschemas)
-                        .ThenInclude(v => v.regels)
-                .FirstOrDefaultAsync(gd => gd.gebruikerId == gebruikerId.Value);
-
-            if (gebruikerDoel == null)
-            {
-                return Ok(new
-                {
-                    heeftDoel = false,
-                    beschikbareDoelen
-                });
-            }
-
-            var schema = gebruikerDoel.doel?.voedingsschemas.FirstOrDefault();
-
-            if (schema == null)
-            {
-                return Ok(new
-                {
-                    heeftDoel = false,
-                    beschikbareDoelen,
-                    message = "Er is nog geen voedingsschema gekoppeld aan jouw gekozen doel."
-                });
-            }
-
-            return Ok(new
-            {
-                heeftDoel = true,
-                beschikbareDoelen,
-                doel = new
-                {
-                    gebruikerDoel.doel!.id,
-                    gebruikerDoel.doel.naam,
-                    gebruikerDoel.doel.beschrijving
-                },
-                schema = new
-                {
-                    schema.id,
-                    schema.titel,
-                    schema.beschrijving,
-                    regels = schema.regels
-                        .OrderBy(r => r.volgorde)
-                        .Select(r => new
-                        {
-                            r.id,
-                            r.maaltijdMoment,
-                            r.advies,
-                            r.volgorde
-                        })
-                }
-            });
+            var result = await _voedingsadviesService.GetMijnSchemaAsync(gebruikerId.Value);
+            return Ok(result);
         }
 
         [HttpPost("kies-doel")]
@@ -104,10 +49,9 @@ namespace Allfit_Webproject.Server.Controllers
                 });
             }
 
-            var doelBestaat = await _db.Doelen
-                .AnyAsync(d => d.id == dto.DoelId && d.actief);
+            var result = await _voedingsadviesService.KiesDoelAsync(gebruikerId.Value, dto);
 
-            if (!doelBestaat)
+            if (result == null)
             {
                 return BadRequest(new
                 {
@@ -115,45 +59,7 @@ namespace Allfit_Webproject.Server.Controllers
                 });
             }
 
-            var gebruikerDoel = await _db.GebruikerDoelen
-                .FirstOrDefaultAsync(gd => gd.gebruikerId == gebruikerId.Value);
-
-            if (gebruikerDoel == null)
-            {
-                gebruikerDoel = new GebruikerDoel
-                {
-                    gebruikerId = gebruikerId.Value,
-                    doelId = dto.DoelId,
-                    aangemaaktOp = DateTime.UtcNow,
-                    gewijzigdOp = DateTime.UtcNow
-                };
-
-                _db.GebruikerDoelen.Add(gebruikerDoel);
-            }
-            else
-            {
-                gebruikerDoel.doelId = dto.DoelId;
-                gebruikerDoel.gewijzigdOp = DateTime.UtcNow;
-            }
-
-            await _db.SaveChangesAsync();
-
-            return await GetMijnSchema();
-        }
-
-        private async Task<List<object>> HaalBeschikbareDoelenOp()
-        {
-            return await _db.Doelen
-                .Where(d => d.actief)
-                .OrderBy(d => d.id)
-                .Select(d => new
-                {
-                    d.id,
-                    d.naam,
-                    d.beschrijving
-                })
-                .Cast<object>()
-                .ToListAsync();
+            return Ok(result);
         }
 
         private int? GetIngelogdeGebruikerId()

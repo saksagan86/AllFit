@@ -74,6 +74,9 @@ builder.Services.AddScoped<ILesService, LesService>();
 builder.Services.AddScoped<ILesRepository, LesRepository>();
 builder.Services.AddScoped<IInschrijvingService, InschrijfService>();
 builder.Services.AddScoped<IInschrijfRepository, InschrijvingRepository>();
+builder.Services.AddScoped<IVoedingsadviesService, VoedingsadviesService>();
+builder.Services.AddScoped<IVoedingsadviesRepository, VoedingsadviesRepository>();
+
 builder.Services.AddScoped<IFormService, FormService>();
 builder.Services.AddScoped<IFormRepo, FormRepo>();
 builder.Services.AddScoped<IVerhaalService, VerhaalService>();
