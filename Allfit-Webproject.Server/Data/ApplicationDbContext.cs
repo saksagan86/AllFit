@@ -30,6 +30,7 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<GebruikerDoel> GebruikerDoelen { get; set; }
         public DbSet<Voedingsschema> Voedingsschemas { get; set; }
         public DbSet<VoedingsschemaRegel> VoedingsschemaRegels { get; set; }
+        public DbSet<TrainingVoortgang> TrainingVoortgangen { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,6 +91,16 @@ namespace Allfit_Webproject.Server.Data
                 .WithMany()
                 .HasForeignKey(gd => gd.doelId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TrainingVoortgang>()
+                .ToTable("TrainingVoortgangen")
+                .HasKey(tv => tv.id);
+
+            modelBuilder.Entity<TrainingVoortgang>()
+                .HasOne(tv => tv.gebruikerDoel)
+                .WithMany()
+                .HasForeignKey(tv => tv.gebruikerDoelId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

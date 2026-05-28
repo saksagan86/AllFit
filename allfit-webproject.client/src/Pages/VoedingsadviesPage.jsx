@@ -72,7 +72,7 @@ function VoedingsadviesPage() {
     if (loading) {
         return (
             <main className="page-container">
-                <section className="auth-card">
+                <section className="auth-card dashboard-card">
                     <h1>Voedingsadvies</h1>
                     <p>Laden...</p>
                 </section>
@@ -84,7 +84,7 @@ function VoedingsadviesPage() {
 
     return (
         <main className="page-container">
-            <section className="auth-card">
+            <section className="auth-card dashboard-card">
                 <h1>Voedingsadvies</h1>
 
                 {error && (

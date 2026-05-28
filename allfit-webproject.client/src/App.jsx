@@ -19,6 +19,7 @@ import LessenPage from './Pages/LessenPage';
 import AccountOverzicht from './Pages/AccountOverzicht';
 import CommunityPage from './Pages/CommunityPage.jsx';
 import VoedingsadviesPage from './Pages/VoedingsadviesPage.jsx';
+import CoachingDashboardPage from './Pages/CoachingDashboardPage.jsx';
 
 import AanbodOverzicht from './Components/AanbodOverzicht';
 
@@ -81,7 +82,14 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-
+                    <Route
+                        path="/account/dashboard"
+                        element={
+                            <ProtectedRoute>
+                                <CoachingDashboardPage />
+                            </ProtectedRoute>
+                        }
+                    />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

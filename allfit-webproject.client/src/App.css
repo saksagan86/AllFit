@@ -916,4 +916,38 @@ ul {
         padding: 32px 16px;
     }
 }
+/*brede layout voor dashboard*/
+.dashboard-card {
+    max-width: 1050px;
+}
+
+.dashboard-intro {
+    max-width: 720px;
+    line-height: 1.6;
+}
+
+.dashboard-section {
+    margin-top: 1.5rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dashboard-panel {
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 1rem;
+    background-color: #fff;
+}
+
+@media (max-width: 768px) {
+    .dashboard-card {
+        max-width: 100%;
+        padding: 1.25rem;
+    }
+}
     

@@ -5,7 +5,7 @@ function AccountOverzicht() {
 
     return (
         <main className="page-container">
-            <section className="auth-card">
+            <section className="auth-card dashboard-card">
                 <h1>Mijn overzicht</h1>
 
                 <p>
@@ -40,7 +40,25 @@ function AccountOverzicht() {
                             Bekijk voedingsadvies
                         </button>
                     </article>
+                    <article
+                        style={{
+                            border: '1px solid #ddd',
+                            borderRadius: '12px',
+                            padding: '1rem',
+                            backgroundColor: '#fff'
+                        }}
+                    >
+                        <h2>Coaching dashboard</h2>
+                        <p>Bekijk je doel, trainingsschema en voortgang in één overzicht.</p>
 
+                        <button
+                            className="button"
+                            type="button"
+                            onClick={() => navigate('/account/dashboard')}
+                        >
+                            Bekijk dashboard
+                        </button>
+                    </article>
                     <article
                         style={{
                             border: '1px solid #ddd',
