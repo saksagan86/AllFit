@@ -8,9 +8,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -58,6 +58,9 @@ builder.Services.AddCors(options =>
 });
 
 // Services and Repositories registration
+builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+
 builder.Services.AddSingleton<ITokenService, TokenService>();
 builder.Services.AddScoped<ILidService, LidService>();
 builder.Services.AddScoped<ILidRepository, LidRepository>();
@@ -71,9 +74,10 @@ builder.Services.AddScoped<ILesService, LesService>();
 builder.Services.AddScoped<ILesRepository, LesRepository>();
 builder.Services.AddScoped<IInschrijvingService, InschrijfService>();
 builder.Services.AddScoped<IInschrijfRepository, InschrijvingRepository>();
-
 builder.Services.AddScoped<IFormService, FormService>();
 builder.Services.AddScoped<IFormRepo, FormRepo>();
+builder.Services.AddScoped<IVerhaalService, VerhaalService>();
+builder.Services.AddScoped<IVerhaalRepository, VerhaalRepository>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];
@@ -101,6 +105,22 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    options.AddPolicy("ContactFormulierPolicy", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 3,
+                Window = TimeSpan.FromMinutes(10),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+});
+
 var app = builder.Build();
 
 app.UseDefaultFiles();
@@ -116,6 +136,9 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowFrontend");
+
+app.UseRateLimiter();
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

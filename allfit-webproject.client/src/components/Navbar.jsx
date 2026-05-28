@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
+
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -52,8 +53,12 @@ function Navbar() {
     return (
         <header className="navbar">
             <div className="navbar-container">
-                <NavLink to="/" className="logo" onClick={closeMenu}>
-                    AllFit
+                <NavLink to="/" className="logo" onClick={closeMenu} aria-label="AllFit home">
+                    <img
+                        src="/images/allfit-logo.png"
+                        alt="AllFit logo"
+                        className="navbar-logo-img"
+                    />
                 </NavLink>
 
                 <button
@@ -137,9 +142,8 @@ function Navbar() {
                                     <NavLink to="/account/overzicht" className="dropdown-item" onClick={closeMenu}>
                                         Overzicht
                                     </NavLink>
-                                    <NavLink to="/account" className="dropdown-item" onClick={closeMenu}>
-                                        Gegevens
-                                    </NavLink>
+
+
                                     <button
                                         type="button"
                                         className="dropdown-item logout-button"
