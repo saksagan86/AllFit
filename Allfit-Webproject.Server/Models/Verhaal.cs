@@ -12,6 +12,6 @@
         public Lid Lid { get; set; }
         public int AanbodId { get; set; }
         public Aanbod Aanbod { get; set; }
-
+        public List<string> Fotos { get; set; } = new();
     }
 }

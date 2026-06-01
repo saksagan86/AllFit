@@ -18,8 +18,10 @@ import LessenPage from './Pages/LessenPage';
 import AccountOverzicht from './Pages/AccountOverzicht';
 import CommunityPage from './Pages/CommunityPage.jsx';
 import VoedingsadviesPage from './Pages/VoedingsadviesPage.jsx';
-
+import VerhaalDetailPagina from './Pages/VerhaalDetailPagina';
 import AanbodOverzicht from './Components/AanbodOverzicht';
+import InschrijvingenPagina from './Pages/InschrijvingenPagina.jsx';
+import VerhaalNieuwPagina from './Pages/VerhaalNieuwePagina.jsx';
 
 function App() {
     return (
@@ -43,7 +45,7 @@ function App() {
                     <Route path="/inschrijven" element={<InschrijfPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/community" element={<CommunityPage />} />
-
+                    <Route path="/community/:verhaalId" element={<VerhaalDetailPagina />} />
                     <Route
                         path="/lessen/:aanbodId"
                         element={
@@ -79,7 +81,19 @@ function App() {
                             </ProtectedRoute>
                         }
                     />
-
+                    <Route
+                        path="/inschrijvingen"
+                        element={
+                            <ProtectedRoute>
+                                <InschrijvingenPagina />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="/community/nieuw" element={
+                        <ProtectedRoute>
+                            <VerhaalNieuwPagina />
+                        </ProtectedRoute>
+                    } />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>

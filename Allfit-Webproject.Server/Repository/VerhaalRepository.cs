@@ -20,11 +20,25 @@ namespace Allfit_Webproject.Server.Repository
                 .Include(v => v.Aanbod)
                 .AsQueryable();
 
-            if (aanbodType == "kickboksen") query = query.Where(v => v.Aanbod is Kickboks);
-            if (aanbodType == "fitness") query = query.Where(v => v.Aanbod is Fitness);
-            if (aanbodType == "groepsles") query = query.Where(v => v.Aanbod is Groepsles);
+            if (aanbodType == "Kickboks") query = query.Where(v => v.Aanbod is Kickboks);
+            if (aanbodType == "Fitness") query = query.Where(v => v.Aanbod is Fitness);
+            if (aanbodType == "Groepsles") query = query.Where(v => v.Aanbod is Groepsles);
 
             return await query.ToListAsync();
+        }
+
+        public async Task<Verhaal?> GetVerhaalByIdAsync(int id)
+        {
+            return await _context.Verhalen
+                .Include(v => v.Lid)
+                .Include(v => v.Aanbod)
+                .FirstOrDefaultAsync(v => v.Id == id);
+        }
+
+        public async Task VerhaalToevoegenAsync(Verhaal verhaal)
+        {
+            await _context.Verhalen.AddAsync(verhaal);
+            await _context.SaveChangesAsync();
         }
 
     }

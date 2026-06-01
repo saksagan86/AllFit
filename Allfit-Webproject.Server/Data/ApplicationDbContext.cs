@@ -47,7 +47,7 @@ namespace Allfit_Webproject.Server.Data
                 .HasDiscriminator<string>("Discriminator")
                 .HasValue<Lid>("Lid")
                 .HasValue<Trainer>("trainer");
-                
+
             modelBuilder.Entity<Doel>()
                 .ToTable("Doelen")
                 .HasKey(d => d.id);
@@ -91,6 +91,11 @@ namespace Allfit_Webproject.Server.Data
                 .WithMany()
                 .HasForeignKey(gd => gd.doelId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<Verhaal>()
+                .Property(v => v.Fotos)
+                .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
         }
     }
 }

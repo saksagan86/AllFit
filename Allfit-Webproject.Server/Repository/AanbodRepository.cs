@@ -53,5 +53,10 @@ namespace Allfit_Webproject.Server.Repository
                 .Where(a => a.SportschoolId == sportschoolId)
                 .ToListAsync();
         }
+
+        public async Task<List<Aanbod>> GetAlleAanbodAsync()
+        {
+            return await _context.Aanbod.ToListAsync();
+        }
     }
 }

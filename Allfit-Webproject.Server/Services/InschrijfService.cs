@@ -38,5 +38,27 @@ namespace Allfit_Webproject.Server.Services
             }
         }
 
+        public async Task<List<InschrijvingDto>> GetInschrijvingenVanLidAsync(int lidId) {
+            var inschrijvingen = await _repo.GetInschrijvingenVanLidAsync(lidId);
+            return inschrijvingen.Select(i => new InschrijvingDto
+            {
+                Id = i.Id,
+                Datum = i.Les.Datum,
+                Tijd = i.Les.Tijd,
+                AanbodNaam = i.Les.Aanbod.naam,
+                ExtraBegeleiding = i.ExtraBegeleiding
+            }).ToList();
+        }
+
+        public async Task DeleteInschrijvingByIdAsync(int inschrijvingId, int lidId)
+        {
+            var inschrijving = await _repo.GetInschrijvingByIdAsync(inschrijvingId);
+            if (inschrijving == null)
+                throw new Exception("Inschrijving niet gevonden");
+            if (inschrijving.LidId != lidId)
+                throw new Exception("Je hebt geen toegang tot deze inschrijving");
+
+            await _repo.DeleteInschrijvingByIdAsync(inschrijvingId);
+        }
     }
 }
