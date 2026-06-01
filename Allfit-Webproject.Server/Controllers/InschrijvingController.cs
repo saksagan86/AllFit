@@ -41,6 +41,47 @@ namespace Allfit_Webproject.Server.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetInschrijvingenVanLid()
+        {
+            var subClaim = User.FindFirst("sub")
+                ?? User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return BadRequest(new { message = "Geen sub claim gevonden" });
+
+            var lidId = int.Parse(subClaim.Value);
+            try
+            {
+                var inschrijvingen = await _service.GetInschrijvingenVanLidAsync(lidId);
+                return Ok(inschrijvingen);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("{inschrijvingId}")]
+        public async Task<IActionResult> DeleteInschrijvingByIdAsync(int inschrijvingId) {
+
+            var subClaim = User.FindFirst("sub")
+                ?? User.FindFirst(ClaimTypes.NameIdentifier);
+            if (subClaim == null)
+                return BadRequest(new { message = "Geen sub claim gevonden" });
+
+            var lidId = int.Parse(subClaim.Value);
+            try
+            {
+                await _service.DeleteInschrijvingByIdAsync(inschrijvingId, lidId);
+                return Ok(new { message= "Uitschrijving is gelukt!"});
+            }
+            catch (Exception ex) {
+                return BadRequest(new { message = ex.Message });
+            }
+
+        }
 
     }
 }

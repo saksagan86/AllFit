@@ -101,4 +101,14 @@ public class AanbodService : IAanbodService
             }
         }).ToList();
     }
+
+    public async Task<List<AanbodNaamDto>> GetAlleAanbodAsync()
+    {
+        var data = await _repo.GetAlleAanbodAsync();
+        return data.Select(a => new AanbodNaamDto
+        {
+            Id = a.id,
+            Naam = a.naam
+        }).ToList();
+    }
 }

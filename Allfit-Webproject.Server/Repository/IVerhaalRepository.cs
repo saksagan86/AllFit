@@ -5,6 +5,7 @@ namespace Allfit_Webproject.Server.Repository
     public interface IVerhaalRepository
     {
         Task<List<Verhaal>> GetVerhalenAsync(string? aanbodType);
-
+        Task<Verhaal?> GetVerhaalByIdAsync(int id);
+        Task VerhaalToevoegenAsync(Verhaal verhaal);
     }
 }

@@ -11,9 +11,9 @@ function AanbodTypeFilter({ waarde, alsWaardeVerandert }) {
                 className="aanbod-locatie-dropdown"
             >
                 <option value="alle">Alle aanbod</option>
-                <option value="kickboksen">Kickboksen</option>
-                <option value="fitness">Fitness</option>
-                <option value="groepsles">Groepsles</option>
+                <option value="Kickboks">Kickboksen</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Groepsles">Groepsles</option>
             </select>
         </div>
     );

@@ -49,6 +49,26 @@ function AccountOverzicht() {
                             backgroundColor: '#fff'
                         }}
                     >
+                        <h2>Mijn inschrijvingen</h2>
+                        <p>Bekijk hier je huidige inschrijvingen</p>
+
+                        <button
+                            className="button"
+                            type="button"
+                            onClick={() => navigate('/inschrijvingen')}
+                        >
+                            Bekijk inschrijvingen
+                        </button>
+                    </article>
+
+                    <article
+                        style={{
+                            border: '1px solid #ddd',
+                            borderRadius: '12px',
+                            padding: '1rem',
+                            backgroundColor: '#fff'
+                        }}
+                    >
                         <h2>Accountgegevens</h2>
                         <p>Bekijk en wijzig je persoonlijke gegevens.</p>
 

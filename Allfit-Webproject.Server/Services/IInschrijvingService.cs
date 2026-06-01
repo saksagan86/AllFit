@@ -7,6 +7,7 @@ namespace Allfit_Webproject.Server.Services
     {
 
         Task AddInschrijvingenAsync(InschrijfDto dto, int lidId);
-
+        Task<List<InschrijvingDto>> GetInschrijvingenVanLidAsync(int lidId);
+        Task DeleteInschrijvingByIdAsync(int inschrijvingId, int lidId);
     }
 }
