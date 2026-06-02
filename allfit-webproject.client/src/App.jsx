@@ -84,6 +84,14 @@ function App() {
                         }
                     />
                     <Route
+                        path="/inschrijvingen"
+                        element={
+                            <ProtectedRoute>
+                                <InschrijvingenPagina />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
                         path="/account/dashboard"
                         element={
                             <ProtectedRoute>
