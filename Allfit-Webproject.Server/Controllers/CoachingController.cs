@@ -52,6 +52,25 @@ namespace Allfit_Webproject.Server.Controllers
 
             return Ok(result);
         }
+        [HttpPost("profiel")]
+        public async Task<IActionResult> MaakOfUpdateProfiel([FromBody] CoachingProfielAanvraagDto dto)
+        {
+            var gebruikerId = GetIngelogdeGebruikerId();
+
+            if (gebruikerId == null)
+            {
+                return Unauthorized(new { message = "Gebruiker kon niet uit de token worden gehaald." });
+            }
+
+            var result = await _coachingService.MaakOfUpdateProfielAsync(gebruikerId.Value, dto);
+
+            if (result == null)
+            {
+                return BadRequest(new { message = "Profiel kon niet worden opgeslagen. Controleer je invoer." });
+            }
+
+            return Ok(result);
+        }
 
         [HttpPost("training-afronden")]
         public async Task<IActionResult> RondTrainingAf([FromBody] TrainingAfrondenDto dto)

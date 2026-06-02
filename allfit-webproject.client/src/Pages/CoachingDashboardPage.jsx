@@ -8,10 +8,41 @@ function CoachingDashboardPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [opslaanBezig, setOpslaanBezig] = useState(false);
+    const [toonProfielForm, setToonProfielForm] = useState(false);
+
+    const [profielForm, setProfielForm] = useState({
+        doelId: '',
+        leeftijd: '',
+        lengteCm: '',
+        gewichtKg: '',
+        activiteitniveau: 'Gemiddeld',
+        doelTermijnMaanden: 6
+    });
 
     useEffect(() => {
         haalDashboardOp();
     }, []);
+
+    const vulProfielForm = (data) => {
+        if (!data) return;
+
+        if (data.heeftProfiel && data.profiel) {
+            setProfielForm({
+                doelId: data.doel?.id || '',
+                leeftijd: data.profiel.leeftijd || '',
+                lengteCm: data.profiel.lengteCm || '',
+                gewichtKg: data.profiel.gewichtKg || '',
+                activiteitniveau: data.profiel.activiteitniveau || 'Gemiddeld',
+                doelTermijnMaanden: data.profiel.doelTermijnMaanden || 6
+            });
+            return;
+        }
+
+        setProfielForm((huidig) => ({
+            ...huidig,
+            doelId: data.doel?.id || data.beschikbareDoelen?.[0]?.id || ''
+        }));
+    };
 
     const haalDashboardOp = async () => {
         setLoading(true);
@@ -33,6 +64,7 @@ function CoachingDashboardPage() {
             }
 
             setDashboard(data);
+            vulProfielForm(data);
         } catch {
             setError('Er is iets misgegaan bij het ophalen van je coaching dashboard.');
         } finally {
@@ -40,30 +72,63 @@ function CoachingDashboardPage() {
         }
     };
 
-    const kiesDoel = async (doelId) => {
+    const handleProfielChange = (event) => {
+        const { name, value } = event.target;
+
+        setProfielForm((huidig) => ({
+            ...huidig,
+            [name]: value
+        }));
+    };
+
+    const slaProfielOp = async (event) => {
+        event.preventDefault();
+
         setOpslaanBezig(true);
         setError('');
 
+        const aanvraag = {
+            doelId: Number(profielForm.doelId),
+            leeftijd: Number(profielForm.leeftijd),
+            lengteCm: Number(profielForm.lengteCm),
+            gewichtKg: Number(profielForm.gewichtKg),
+            activiteitniveau: profielForm.activiteitniveau,
+            doelTermijnMaanden: Number(profielForm.doelTermijnMaanden)
+        };
+
+        if (
+            !aanvraag.doelId ||
+            !aanvraag.leeftijd ||
+            !aanvraag.lengteCm ||
+            !aanvraag.gewichtKg
+        ) {
+            setError('Vul alle verplichte velden in.');
+            setOpslaanBezig(false);
+            return;
+        }
+
         try {
-            const response = await fetch('/api/Coaching/kies-doel', {
+            const response = await fetch('/api/Coaching/profiel', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
                 },
-                body: JSON.stringify({ doelId })
+                body: JSON.stringify(aanvraag)
             });
 
             const data = await response.json();
 
             if (!response.ok) {
-                setError(data.message || 'Doel kon niet worden opgeslagen.');
+                setError(data.message || 'Profiel kon niet worden opgeslagen.');
                 return;
             }
 
             setDashboard(data);
+            vulProfielForm(data);
+            setToonProfielForm(false);
         } catch {
-            setError('Er is iets misgegaan bij het opslaan van je doel.');
+            setError('Er is iets misgegaan bij het opslaan van je profiel.');
         } finally {
             setOpslaanBezig(false);
         }
@@ -94,6 +159,7 @@ function CoachingDashboardPage() {
             }
 
             setDashboard(data);
+            vulProfielForm(data);
         } catch {
             setError('Er is iets misgegaan bij het opslaan van je voortgang.');
         } finally {
@@ -119,13 +185,18 @@ function CoachingDashboardPage() {
         percentage: 0
     };
 
+    const moetProfielInvullen = dashboard && dashboard.heeftProfiel === false;
+    const profielFormZichtbaar = moetProfielInvullen || toonProfielForm;
+
     return (
         <main className="page-container">
             <section className="auth-card dashboard-card">
                 <h1>Mijn coaching</h1>
 
                 <p className="dashboard-intro">
-                    Stel je sportdoel in, bekijk je trainingsschema en houd je voortgang bij.
+                    Vul je doel en basisgegevens in. AllFit gebruikt deze gegevens om een
+                    BMI-indicatie, persoonlijk voedingsadvies, trainingsschema en
+                    weekvoortgang te tonen.
                 </p>
 
                 {error && (
@@ -134,78 +205,202 @@ function CoachingDashboardPage() {
                     </p>
                 )}
 
-                {dashboard && dashboard.heeftDoel === false && (
-                    <section style={{ marginTop: '1.5rem' }}>
-                        <h2>Kies je doel</h2>
-                        <p>
-                            Kies een doel. Op basis hiervan wordt jouw trainingsschema en
-                            voortgangsoverzicht opgebouwd.
-                        </p>
+                {profielFormZichtbaar && (
+                    <section className="dashboard-section">
+                        <h2>
+                            {moetProfielInvullen
+                                ? 'Persoonlijk advies instellen'
+                                : 'Profiel wijzigen'}
+                        </h2>
 
-                        <div
-                            style={{
-                                display: 'grid',
-                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                                gap: '1rem',
-                                marginTop: '1rem'
-                            }}
-                        >
-                            {doelen.map((doel) => (
-                                <article
-                                    key={doel.id}
-                                    style={{
-                                        border: '1px solid #ddd',
-                                        borderRadius: '12px',
-                                        padding: '1rem',
-                                        backgroundColor: '#fff'
-                                    }}
+                        <form onSubmit={slaProfielOp}>
+                            <div className="dashboard-grid">
+                                <div className="form-group">
+                                    <label htmlFor="doelId">Doel</label>
+                                    <select
+                                        id="doelId"
+                                        name="doelId"
+                                        value={profielForm.doelId}
+                                        onChange={handleProfielChange}
+                                        required
+                                    >
+                                        <option value="">Kies een doel</option>
+                                        {doelen.map((doel) => (
+                                            <option key={doel.id} value={doel.id}>
+                                                {doel.naam}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="leeftijd">Leeftijd</label>
+                                    <input
+                                        id="leeftijd"
+                                        name="leeftijd"
+                                        type="number"
+                                        min="12"
+                                        max="100"
+                                        value={profielForm.leeftijd}
+                                        onChange={handleProfielChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="lengteCm">Lengte in cm</label>
+                                    <input
+                                        id="lengteCm"
+                                        name="lengteCm"
+                                        type="number"
+                                        min="100"
+                                        max="250"
+                                        step="0.1"
+                                        value={profielForm.lengteCm}
+                                        onChange={handleProfielChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="gewichtKg">Gewicht in kg</label>
+                                    <input
+                                        id="gewichtKg"
+                                        name="gewichtKg"
+                                        type="number"
+                                        min="30"
+                                        max="250"
+                                        step="0.1"
+                                        value={profielForm.gewichtKg}
+                                        onChange={handleProfielChange}
+                                        required
+                                    />
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="activiteitniveau">Activiteitniveau</label>
+                                    <select
+                                        id="activiteitniveau"
+                                        name="activiteitniveau"
+                                        value={profielForm.activiteitniveau}
+                                        onChange={handleProfielChange}
+                                    >
+                                        <option value="Laag">Laag / beginner</option>
+                                        <option value="Gemiddeld">Gemiddeld</option>
+                                        <option value="Hoog">Hoog / actief</option>
+                                    </select>
+                                </div>
+
+                                <div className="form-group">
+                                    <label htmlFor="doelTermijnMaanden">Termijn</label>
+                                    <select
+                                        id="doelTermijnMaanden"
+                                        name="doelTermijnMaanden"
+                                        value={profielForm.doelTermijnMaanden}
+                                        onChange={handleProfielChange}
+                                    >
+                                        <option value="3">3 maanden</option>
+                                        <option value="6">6 maanden</option>
+                                        <option value="12">12 maanden</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
+                                <button
+                                    className="button"
+                                    type="submit"
+                                    disabled={opslaanBezig}
                                 >
-                                    <h3>{doel.naam}</h3>
-                                    <p>{doel.beschrijving}</p>
+                                    {opslaanBezig ? 'Opslaan...' : 'Advies maken'}
+                                </button>
 
+                                {dashboard?.heeftProfiel && (
                                     <button
                                         className="button"
                                         type="button"
                                         disabled={opslaanBezig}
-                                        onClick={() => kiesDoel(doel.id)}
+                                        onClick={() => setToonProfielForm(false)}
                                     >
-                                        {opslaanBezig ? 'Opslaan...' : 'Kies dit doel'}
+                                        Annuleren
                                     </button>
-                                </article>
-                            ))}
-                        </div>
+                                )}
+                            </div>
+                        </form>
                     </section>
                 )}
 
-                {dashboard && dashboard.heeftDoel === true && (
+                {dashboard && dashboard.heeftProfiel === true && !profielFormZichtbaar && (
                     <>
-                        <section style={{ marginTop: '1.5rem' }}>
-                            <h2>Jouw actieve doel</h2>
+                        <section className="dashboard-section">
+                            <h2>Jouw persoonlijke profiel</h2>
 
-                            <article
-                                style={{
-                                    border: '1px solid #ddd',
-                                    borderRadius: '12px',
-                                    padding: '1rem',
-                                    backgroundColor: '#fff'
-                                }}
-                            >
-                                <h3>{dashboard.doel.naam}</h3>
-                                <p>{dashboard.doel.beschrijving}</p>
-                            </article>
+                            <div className="dashboard-grid">
+                                <article className="dashboard-panel">
+                                    <h3>{dashboard.doel?.naam}</h3>
+                                    <p>{dashboard.doel?.beschrijving}</p>
+                                    <p>
+                                        Termijn: {dashboard.profiel.doelTermijnMaanden}{' '}
+                                        maanden
+                                    </p>
+                                </article>
+
+                                <article className="dashboard-panel">
+                                    <h3>BMI-indicatie</h3>
+                                    <p>
+                                        <strong>{dashboard.profiel.bmi}</strong> —{' '}
+                                        {dashboard.profiel.bmiCategorie}
+                                    </p>
+                                    <p>
+                                        Deze indicatie wordt alleen gebruikt om het advies
+                                        beter af te stemmen.
+                                    </p>
+                                </article>
+
+                                <article className="dashboard-panel">
+                                    <h3>Basisgegevens</h3>
+                                    <p>Leeftijd: {dashboard.profiel.leeftijd}</p>
+                                    <p>Lengte: {dashboard.profiel.lengteCm} cm</p>
+                                    <p>Gewicht: {dashboard.profiel.gewichtKg} kg</p>
+                                    <p>
+                                        Activiteitniveau:{' '}
+                                        {dashboard.profiel.activiteitniveau}
+                                    </p>
+                                </article>
+                            </div>
                         </section>
 
-                        <section style={{ marginTop: '1.5rem' }}>
+                        <section className="dashboard-section">
+                            <h2>Voedingsadvies</h2>
+
+                            {dashboard.advies ? (
+                                <article className="dashboard-panel">
+                                    <h3>{dashboard.advies.titel}</h3>
+                                    <p>{dashboard.advies.beschrijving}</p>
+
+                                    <h4>Calorieadvies</h4>
+                                    <p>{dashboard.advies.calorieAdvies}</p>
+
+                                    <h4>Eiwitadvies</h4>
+                                    <p>{dashboard.advies.eiwitAdvies}</p>
+
+                                    <h4>Tips</h4>
+                                    <p>{dashboard.advies.algemeneTips}</p>
+                                </article>
+                            ) : (
+                                <article className="dashboard-panel">
+                                    <p>
+                                        Er is nog geen passend voedingsadvies gevonden.
+                                        Controleer of er templates in de database staan.
+                                    </p>
+                                </article>
+                            )}
+                        </section>
+
+                        <section className="dashboard-section">
                             <h2>Voortgang deze week</h2>
 
-                            <div
-                                style={{
-                                    border: '1px solid #ddd',
-                                    borderRadius: '12px',
-                                    padding: '1rem',
-                                    backgroundColor: '#fff'
-                                }}
-                            >
+                            <article className="dashboard-panel">
                                 <p>
                                     {progress.afgerondDezeWeek} van {progress.weekDoel}{' '}
                                     trainingen afgerond
@@ -238,29 +433,17 @@ function CoachingDashboardPage() {
                                 <strong style={{ display: 'block', marginTop: '0.75rem' }}>
                                     {progress.percentage}%
                                 </strong>
-                            </div>
+                            </article>
                         </section>
 
-                        <section style={{ marginTop: '1.5rem' }}>
+                        <section className="dashboard-section">
                             <h2>Trainingsschema</h2>
 
-                            <div
-                                style={{
-                                    display: 'grid',
-                                    gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                                    gap: '1rem',
-                                    marginTop: '1rem'
-                                }}
-                            >
+                            <div className="dashboard-grid">
                                 {dashboard.trainingsschema.map((training) => (
                                     <article
                                         key={`${training.dag}-${training.titel}`}
-                                        style={{
-                                            border: '1px solid #ddd',
-                                            borderRadius: '12px',
-                                            padding: '1rem',
-                                            backgroundColor: '#fff'
-                                        }}
+                                        className="dashboard-panel"
                                     >
                                         <h3>
                                             {training.dag}: {training.titel}
@@ -289,15 +472,52 @@ function CoachingDashboardPage() {
                             </div>
                         </section>
 
-                        <section style={{ marginTop: '1.5rem' }}>
-                            <h2>Historie</h2>
+                        <section className="dashboard-section">
+                            <h2>Weekhistorie</h2>
+
+                            {dashboard.weekHistorie.length === 0 ? (
+                                <article className="dashboard-panel">
+                                    <p>
+                                        Er is nog geen weekhistorie. Rond trainingen af om
+                                        je voortgang per week te zien.
+                                    </p>
+                                </article>
+                            ) : (
+                                <div className="dashboard-grid">
+                                    {dashboard.weekHistorie.map((week) => (
+                                        <article
+                                            key={week.weekStartDatum}
+                                            className="dashboard-panel"
+                                        >
+                                            <h3>
+                                                Week van{' '}
+                                                {new Date(
+                                                    week.weekStartDatum
+                                                ).toLocaleDateString('nl-NL')}
+                                            </h3>
+                                            <p>
+                                                {week.afgerondeTrainingen}/
+                                                {week.weekDoel} trainingen afgerond
+                                            </p>
+                                            <p>{week.statusTekst}</p>
+                                            <strong>{week.percentage}%</strong>
+                                        </article>
+                                    ))}
+                                </div>
+                            )}
+                        </section>
+
+                        <section className="dashboard-section">
+                            <h2>Recente trainingen</h2>
 
                             {dashboard.historie.length === 0 ? (
-                                <p>Je hebt nog geen trainingen afgerond.</p>
+                                <article className="dashboard-panel">
+                                    <p>Je hebt nog geen trainingen afgerond.</p>
+                                </article>
                             ) : (
-                                <div style={{ marginTop: '1rem' }}>
+                                <article className="dashboard-panel">
                                     {dashboard.historie.map((item) => (
-                                        <article
+                                        <div
                                             key={item.id}
                                             style={{
                                                 borderBottom: '1px solid #ddd',
@@ -307,42 +527,25 @@ function CoachingDashboardPage() {
                                             <strong>{item.trainingsDag}</strong>
                                             <p>
                                                 Afgerond op:{' '}
-                                                {new Date(item.afgerondOp).toLocaleDateString(
-                                                    'nl-NL'
-                                                )}
+                                                {new Date(
+                                                    item.afgerondOp
+                                                ).toLocaleDateString('nl-NL')}
                                             </p>
                                             {item.notitie && <p>{item.notitie}</p>}
-                                        </article>
+                                        </div>
                                     ))}
-                                </div>
+                                </article>
                             )}
                         </section>
 
-                        <section style={{ marginTop: '2rem' }}>
-                            <h2>Doel wijzigen</h2>
-
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    gap: '1rem',
-                                    marginTop: '1rem'
-                                }}
+                        <section className="dashboard-section">
+                            <button
+                                className="button"
+                                type="button"
+                                onClick={() => setToonProfielForm(true)}
                             >
-                                {doelen.map((doel) => (
-                                    <button
-                                        key={doel.id}
-                                        className="button"
-                                        type="button"
-                                        disabled={
-                                            opslaanBezig || doel.id === dashboard.doel.id
-                                        }
-                                        onClick={() => kiesDoel(doel.id)}
-                                    >
-                                        {doel.naam}
-                                    </button>
-                                ))}
-                            </div>
+                                Profiel of doel wijzigen
+                            </button>
                         </section>
                     </>
                 )}

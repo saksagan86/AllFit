@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate} from 'react-router-dom';
 
 import Navbar from './Components/Navbar.jsx';
 import ProtectedRoute from './Components/ProtectedRoute.jsx';
@@ -78,7 +78,7 @@ function App() {
                         path="/voedingsadvies"
                         element={
                             <ProtectedRoute>
-                                <VoedingsadviesPage />
+                                <Navigate to="/account/dashboard" replace />
                             </ProtectedRoute>
                         }
                     />

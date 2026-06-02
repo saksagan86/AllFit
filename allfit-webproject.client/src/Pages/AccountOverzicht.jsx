@@ -21,25 +21,7 @@ function AccountOverzicht() {
                         marginTop: '1.5rem'
                     }}
                 >
-                    <article
-                        style={{
-                            border: '1px solid #ddd',
-                            borderRadius: '12px',
-                            padding: '1rem',
-                            backgroundColor: '#fff'
-                        }}
-                    >
-                        <h2>Voedingsadvies</h2>
-                        <p>Kies je doel en bekijk het voedingsadvies dat daarbij hoort.</p>
-
-                        <button
-                            className="button"
-                            type="button"
-                            onClick={() => navigate('/voedingsadvies')}
-                        >
-                            Bekijk voedingsadvies
-                        </button>
-                    </article>
+   
                     <article
                         style={{
                             border: '1px solid #ddd',
