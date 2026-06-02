@@ -76,6 +76,8 @@ builder.Services.AddScoped<IInschrijvingService, InschrijfService>();
 builder.Services.AddScoped<IInschrijfRepository, InschrijvingRepository>();
 builder.Services.AddScoped<IVoedingsadviesService, VoedingsadviesService>();
 builder.Services.AddScoped<IVoedingsadviesRepository, VoedingsadviesRepository>();
+builder.Services.AddScoped<ICoachingService, CoachingService>();
+builder.Services.AddScoped<ICoachingRepository, CoachingRepository>();
 
 builder.Services.AddScoped<IFormService, FormService>();
 builder.Services.AddScoped<IFormRepo, FormRepo>();

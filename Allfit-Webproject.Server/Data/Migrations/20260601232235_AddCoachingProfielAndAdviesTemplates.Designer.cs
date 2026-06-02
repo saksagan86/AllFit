@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260601232235_AddCoachingProfielAndAdviesTemplates")]
+    partial class AddCoachingProfielAndAdviesTemplates
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -589,46 +592,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasIndex("gebruikerDoelId");
 
                     b.ToTable("TrainingVoortgangen", (string)null);
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Verhaal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AanbodId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Fotos")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("GeplaatstOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Inhoud")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("LidId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Titel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AanbodId");
-
-                    b.HasIndex("LidId");
-
-                    b.ToTable("Verhalen");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Voedingsschema", b =>
@@ -951,23 +914,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("gebruikerDoel");
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.Verhaal", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Aanbod")
-                        .WithMany()
-                        .HasForeignKey("AanbodId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Lid", "Lid")
-                        .WithMany()
-                        .HasForeignKey("LidId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Aanbod");
-
-                    b.Navigation("Lid");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Voedingsschema", b =>

@@ -30,6 +30,10 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<GebruikerDoel> GebruikerDoelen { get; set; }
         public DbSet<Voedingsschema> Voedingsschemas { get; set; }
         public DbSet<VoedingsschemaRegel> VoedingsschemaRegels { get; set; }
+        public DbSet<TrainingVoortgang> TrainingVoortgangen { get; set; }
+        public DbSet<GebruikerCoachingProfiel> GebruikerCoachingProfielen { get; set; }
+        public DbSet<AdviesTemplate> AdviesTemplates { get; set; }
+        public DbSet<WekelijkseVoortgang> WekelijkseVoortgangen { get; set; }
         public DbSet<Verhaal> Verhalen { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -91,11 +95,71 @@ namespace Allfit_Webproject.Server.Data
                 .WithMany()
                 .HasForeignKey(gd => gd.doelId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TrainingVoortgang>()
+                .ToTable("TrainingVoortgangen")
+                .HasKey(tv => tv.id);
+
+            modelBuilder.Entity<TrainingVoortgang>()
+                .HasOne(tv => tv.gebruikerDoel)
+                .WithMany()
+                .HasForeignKey(tv => tv.gebruikerDoelId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<GebruikerCoachingProfiel>()
+                .ToTable("GebruikerCoachingProfielen")
+                .HasKey(cp => cp.id);
+
+            modelBuilder.Entity<GebruikerCoachingProfiel>()
+                .HasIndex(cp => cp.gebruikerId)
+                .IsUnique();
+
+            modelBuilder.Entity<GebruikerCoachingProfiel>()
+                .HasOne(cp => cp.gebruiker)
+                .WithMany()
+                .HasForeignKey(cp => cp.gebruikerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<GebruikerCoachingProfiel>()
+                .HasOne(cp => cp.doel)
+                .WithMany()
+                .HasForeignKey(cp => cp.doelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GebruikerCoachingProfiel>()
+                .HasOne(cp => cp.adviesTemplate)
+                .WithMany()
+                .HasForeignKey(cp => cp.adviesTemplateId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<AdviesTemplate>()
+                .ToTable("AdviesTemplates")
+                .HasKey(at => at.id);
+
+            modelBuilder.Entity<AdviesTemplate>()
+                .HasOne(at => at.doel)
+                .WithMany()
+                .HasForeignKey(at => at.doelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WekelijkseVoortgang>()
+                .ToTable("WekelijkseVoortgangen")
+                .HasKey(wv => wv.id);
+
+            modelBuilder.Entity<WekelijkseVoortgang>()
+                .HasOne(wv => wv.gebruikerCoachingProfiel)
+                .WithMany()
+                .HasForeignKey(wv => wv.gebruikerCoachingProfielId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<WekelijkseVoortgang>()
+                .HasIndex(wv => new { wv.gebruikerCoachingProfielId, wv.weekStartDatum })
+                .IsUnique();
             modelBuilder.Entity<Verhaal>()
                 .Property(v => v.Fotos)
                 .HasConversion(
                 v => string.Join(',', v),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
         }
+        
     }
 }

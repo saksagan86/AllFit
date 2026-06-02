@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate} from 'react-router-dom';
 
 import Navbar from './Components/Navbar.jsx';
 import ProtectedRoute from './Components/ProtectedRoute.jsx';
@@ -18,6 +18,8 @@ import LessenPage from './Pages/LessenPage';
 import AccountOverzicht from './Pages/AccountOverzicht';
 import CommunityPage from './Pages/CommunityPage.jsx';
 import VoedingsadviesPage from './Pages/VoedingsadviesPage.jsx';
+import CoachingDashboardPage from './Pages/CoachingDashboardPage.jsx';
+
 import VerhaalDetailPagina from './Pages/VerhaalDetailPagina';
 import AanbodOverzicht from './Components/AanbodOverzicht';
 import InschrijvingenPagina from './Pages/InschrijvingenPagina.jsx';
@@ -77,23 +79,18 @@ function App() {
                         path="/voedingsadvies"
                         element={
                             <ProtectedRoute>
-                                <VoedingsadviesPage />
+                                <Navigate to="/account/dashboard" replace />
                             </ProtectedRoute>
                         }
                     />
                     <Route
-                        path="/inschrijvingen"
+                        path="/account/dashboard"
                         element={
                             <ProtectedRoute>
-                                <InschrijvingenPagina />
+                                <CoachingDashboardPage />
                             </ProtectedRoute>
                         }
                     />
-                    <Route path="/community/nieuw" element={
-                        <ProtectedRoute>
-                            <VerhaalNieuwPagina />
-                        </ProtectedRoute>
-                    } />
                     <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </div>
