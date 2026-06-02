@@ -4,6 +4,7 @@ using Allfit_Webproject.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Allfit_Webproject.Server.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260529100148_DatabaseFotogallery")]
+    partial class DatabaseFotogallery
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,55 +89,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasKey("LidID", "MollieID");
 
                     b.ToTable("Abonnement");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.AdviesTemplate", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<bool>("actief")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("activiteitniveau")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("algemeneTips")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("beschrijving")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("bmiCategorie")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("calorieAdvies")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("doelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("eiwitAdvies")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("titel")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("doelId");
-
-                    b.ToTable("AdviesTemplates", (string)null);
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.ContactFormulier", b =>
@@ -292,64 +246,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.HasDiscriminator().HasValue("Gebruiker");
 
                     b.UseTphMappingStrategy();
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.GebruikerCoachingProfiel", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("aangemaaktOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("activiteitniveau")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("adviesTemplateId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("bmi")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("bmiCategorie")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("doelId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("doelTermijnMaanden")
-                        .HasColumnType("int");
-
-                    b.Property<int>("gebruikerId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("gewichtKg")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("gewijzigdOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("leeftijd")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("lengteCm")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("adviesTemplateId");
-
-                    b.HasIndex("doelId");
-
-                    b.HasIndex("gebruikerId")
-                        .IsUnique();
-
-                    b.ToTable("GebruikerCoachingProfielen", (string)null);
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.GebruikerDoel", b =>
@@ -563,32 +459,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.ToTable("Sportscholen");
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.TrainingVoortgang", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("afgerondOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("gebruikerDoelId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("notitie")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("trainingsDag")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("gebruikerDoelId");
-
-                    b.ToTable("TrainingVoortgangen", (string)null);
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Verhaal", b =>
                 {
                     b.Property<int>("Id")
@@ -686,49 +556,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.ToTable("VoedingsschemaRegels", (string)null);
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.WekelijkseVoortgang", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<DateTime>("aangemaaktOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("afgerondeTrainingen")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("doelBehaald")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("gebruikerCoachingProfielId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal?>("gewichtKg")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("gewijzigdOp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("notitie")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("weekDoel")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("weekStartDatum")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("gebruikerCoachingProfielId", "weekStartDatum")
-                        .IsUnique();
-
-                    b.ToTable("WekelijkseVoortgangen", (string)null);
-                });
-
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Fitness", b =>
                 {
                     b.HasBaseType("Allfit_Webproject.Server.Models.Aanbod");
@@ -815,17 +642,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.Navigation("trainer");
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.AdviesTemplate", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.Doel", "doel")
-                        .WithMany()
-                        .HasForeignKey("doelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("doel");
-                });
-
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Faciliteit", b =>
                 {
                     b.HasOne("Allfit_Webproject.Server.Models.Sportschool", "Sportschool")
@@ -835,32 +651,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Sportschool");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.GebruikerCoachingProfiel", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.AdviesTemplate", "adviesTemplate")
-                        .WithMany()
-                        .HasForeignKey("adviesTemplateId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Doel", "doel")
-                        .WithMany()
-                        .HasForeignKey("doelId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Allfit_Webproject.Server.Models.Gebruiker", "gebruiker")
-                        .WithMany()
-                        .HasForeignKey("gebruikerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("adviesTemplate");
-
-                    b.Navigation("doel");
-
-                    b.Navigation("gebruiker");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.GebruikerDoel", b =>
@@ -942,15 +732,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                     b.Navigation("Sportschool");
                 });
 
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.TrainingVoortgang", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.GebruikerDoel", "gebruikerDoel")
-                        .WithMany()
-                        .HasForeignKey("gebruikerDoelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("gebruikerDoel");
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Verhaal", b =>
                 {
                     b.HasOne("Allfit_Webproject.Server.Models.Aanbod", "Aanbod")
@@ -990,17 +771,6 @@ namespace Allfit_Webproject.Server.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("voedingsschema");
-                });
-
-            modelBuilder.Entity("Allfit_Webproject.Server.Models.WekelijkseVoortgang", b =>
-                {
-                    b.HasOne("Allfit_Webproject.Server.Models.GebruikerCoachingProfiel", "gebruikerCoachingProfiel")
-                        .WithMany()
-                        .HasForeignKey("gebruikerCoachingProfielId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("gebruikerCoachingProfiel");
                 });
 
             modelBuilder.Entity("Allfit_Webproject.Server.Models.Doel", b =>

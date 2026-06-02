@@ -14,14 +14,16 @@ import NotFoundPage from './Pages/NotFoundPage.jsx';
 import DetailPagina from './Pages/DetailPagina';
 import LoginPage from './Pages/LoginPage.jsx';
 import AccountPage from './Pages/AccountPage.jsx';
-import ExtraoptiesPagina from './Pages/ExtraoptiesPagina';
 import LessenPage from './Pages/LessenPage';
 import AccountOverzicht from './Pages/AccountOverzicht';
 import CommunityPage from './Pages/CommunityPage.jsx';
 import VoedingsadviesPage from './Pages/VoedingsadviesPage.jsx';
 import CoachingDashboardPage from './Pages/CoachingDashboardPage.jsx';
 
+import VerhaalDetailPagina from './Pages/VerhaalDetailPagina';
 import AanbodOverzicht from './Components/AanbodOverzicht';
+import InschrijvingenPagina from './Pages/InschrijvingenPagina.jsx';
+import VerhaalNieuwPagina from './Pages/VerhaalNieuwePagina.jsx';
 
 function App() {
     return (
@@ -42,11 +44,10 @@ function App() {
                     <Route path="/contact" element={<ContactPage />} />
                     <Route path="/aanbod" element={<AanbodOverzicht />} />
                     <Route path="/aanbod/:sportNaam" element={<DetailPagina />} />
-                    <Route path="/aanbod/extraopties" element={<ExtraoptiesPagina />} />
                     <Route path="/inschrijven" element={<InschrijfPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/community" element={<CommunityPage />} />
-
+                    <Route path="/community/:verhaalId" element={<VerhaalDetailPagina />} />
                     <Route
                         path="/lessen/:aanbodId"
                         element={

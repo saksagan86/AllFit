@@ -15,7 +15,9 @@
   <ItemGroup>
     <None Remove="public\favicon.svg" />
     <None Remove="public\icons.svg" />
+    <None Remove="src\Components\ExtraBegleidingDetail.jsx" />
     <None Remove="src\Pages\CommunityPage.js" />
+    <None Remove="src\Pages\ExtraoptiesPagina.jsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="public\images\" />

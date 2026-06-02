@@ -9,5 +9,6 @@ namespace Allfit_Webproject.Server.Repository
         Task<List<Kickboks>> GetKickboksenAsync(int sportschoolId);
         Task<List<Aanbod>> GetExtraBegeleidingAsync(int sportschoolId);
         Task<List<Aanbod>> GetAllAanbodAsync(int sportschoolId);
+        Task<List<Aanbod>> GetAlleAanbodAsync();
     }
 }

@@ -81,6 +81,8 @@ builder.Services.AddScoped<ICoachingRepository, CoachingRepository>();
 
 builder.Services.AddScoped<IFormService, FormService>();
 builder.Services.AddScoped<IFormRepo, FormRepo>();
+builder.Services.AddScoped<IVerhaalService, VerhaalService>();
+builder.Services.AddScoped<IVerhaalRepository, VerhaalRepository>();
 
 // JWT Authentication
 var jwtKey = builder.Configuration["Jwt:Key"];

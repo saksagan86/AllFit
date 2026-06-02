@@ -34,6 +34,7 @@ namespace Allfit_Webproject.Server.Data
         public DbSet<GebruikerCoachingProfiel> GebruikerCoachingProfielen { get; set; }
         public DbSet<AdviesTemplate> AdviesTemplates { get; set; }
         public DbSet<WekelijkseVoortgang> WekelijkseVoortgangen { get; set; }
+        public DbSet<Verhaal> Verhalen { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,7 +51,7 @@ namespace Allfit_Webproject.Server.Data
                 .HasDiscriminator<string>("Discriminator")
                 .HasValue<Lid>("Lid")
                 .HasValue<Trainer>("trainer");
-                
+
             modelBuilder.Entity<Doel>()
                 .ToTable("Doelen")
                 .HasKey(d => d.id);
@@ -153,6 +154,11 @@ namespace Allfit_Webproject.Server.Data
             modelBuilder.Entity<WekelijkseVoortgang>()
                 .HasIndex(wv => new { wv.gebruikerCoachingProfielId, wv.weekStartDatum })
                 .IsUnique();
+            modelBuilder.Entity<Verhaal>()
+                .Property(v => v.Fotos)
+                .HasConversion(
+                v => string.Join(',', v),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
         }
         
     }
