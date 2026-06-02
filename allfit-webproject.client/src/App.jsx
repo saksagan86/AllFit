@@ -47,6 +47,12 @@ function App() {
                     <Route path="/inschrijven" element={<InschrijfPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community" element={<CommunityPage />} />
+                    <Route path="/community/nieuw" element={
+                        <ProtectedRoute>
+                            <VerhaalNieuwPagina />
+                        </ProtectedRoute>
+                    } />
                     <Route path="/community/:verhaalId" element={<VerhaalDetailPagina />} />
                     <Route
                         path="/lessen/:aanbodId"
