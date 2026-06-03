@@ -9,6 +9,7 @@
         public string Stad { get; set; }
 
         public string Adres { get; set; }
+        public float[] Coordinaten { get; set; }
 
         public List<ToonOpeningstijdInfoDTO> Openingstijden { get; set; }
 

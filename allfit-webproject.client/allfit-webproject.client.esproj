@@ -20,7 +20,6 @@
     <None Remove="src\Pages\ExtraoptiesPagina.jsx" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="public\images\" />
     <Folder Include="src\services\" />
   </ItemGroup>
 </Project>

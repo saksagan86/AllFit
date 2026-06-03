@@ -25,6 +25,7 @@ namespace Allfit_Webproject.Server.Services
                 Naam = s.naam,
                 Stad = s.stad,
                 Adres = s.adres,
+                Coordinaten = [s.lon, s.lat],
                 Openingstijden = s.openingstijdenSportschool.Select(o => new ToonOpeningstijdInfoDTO
                 {
                     Dag = o.dag,

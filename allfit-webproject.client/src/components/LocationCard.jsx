@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function LocationCard({ location }) {
+function LocationCard({ location, setLocation }) {
     return (
         <article className="location-card">
             <h2>{location.naam}</h2>
@@ -10,6 +10,7 @@ function LocationCard({ location }) {
             <section className="location-section">
                 <h3>Adres</h3>
                 <p>{location.adres}</p>
+                <button className="button" onClick={setLocation}>Bekijk op kaart.</button>
             </section>
 
             <section className="location-section">
