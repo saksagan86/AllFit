@@ -9,6 +9,7 @@ function LocatiesPage() {
     const [locations, setLocations] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [selectedLocation, setSelectedLocation] = useState(null);
 
     useEffect(() => {
         const fetchSportscholen = async () => {
@@ -47,10 +48,10 @@ function LocatiesPage() {
 
             <section className="locations-grid">
                 {locations.map((location) => (
-                    <LocationCard key={location.id} location={location} />
+                    <LocationCard key={location.id} location={location} setLocation={() => setSelectedLocation(location)} />
                 ))}
             </section>
-            <LocationsMap></LocationsMap>
+            <LocationsMap coordinateLonLat={selectedLocation ? selectedLocation.coordinaten : [0, 0]} />
 
         </main>
     )
