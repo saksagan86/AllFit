@@ -66,26 +66,33 @@ function Proefles() {
                 <h2>"Boek een proefles!"</h2>
                 <p>Vul het formulier in om een gesprek te plannen.</p>
                 <form className="form-group" action={sendForm}>
-                    <label>Locatie: </label>
-                    <select name="locatie" required onChange={e => loadLessen(e.target.value)}>
-                    {locaties.map((loc) => (
-                        <option key={loc.id} value={loc.id}>{loc.naam}</option>
-                    ))}
+
+                    <label htmlFor="locatie">Locatie: </label>
+                    <select id="locatie" name="locatie" required onChange={e => loadLessen(e.target.value)}>
+                        {locaties.map((loc) => (
+                            <option key={loc.id} value={loc.id}>{loc.naam}</option>
+                        ))}
                     </select>
-                    <label>Les: </label>
-                    <select name="les" required>
+
+                    <label htmlFor="les">Les: </label>
+                    <select id="les" name="les" required>
                         {lessen.map((les) => (
                             <option key={les.id} value={les.id}>{les.naam}</option>
                         ))}
                     </select>
-                    <label>Naam: </label>
-                    <input type="text" name="name" required />
-                    <label>Email: </label>
-                    <input type="email" name="email" required />
-                    <label>Telefoonnummer: </label>
-                    <input type="tel" name="tel" required />
-                    <label>Met het versturen van de gegevens ga ik akkoord om mij te benaderen voor verdere informatie. </label>
-                    <input type="submit" value={"Verstuur"} />
+
+                    <label htmlFor="name">Naam: </label>
+                    <input id="name" type="text" name="name" required />
+
+                    <label htmlFor="email">Email: </label>
+                    <input id="email" type="email" name="email" required />
+
+                    <label htmlFor="tel">Telefoonnummer: </label>
+                    <input id="tel" type="tel" name="tel" required />
+
+                    <label htmlFor="akkoord">Met het versturen van de gegevens ga ik akkoord om mij te benaderen voor verdere informatie.</label>
+                    <input id="akkoord" type="submit" value="Verstuur" />
+
                 </form>
             </PopUp>
         </div>

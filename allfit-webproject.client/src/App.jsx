@@ -34,10 +34,12 @@ function App() {
                 href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Roboto:wght@700&display=swap"
                 rel="stylesheet"
             />
-
+            <a href="#main-content" className="skip-link">
+                Ga naar inhoud
+            </a>
             <Navbar />
 
-            <div className="page-content">
+            <div id="main-content" className="page-content">
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/locaties" element={<LocatiesPage />} />
