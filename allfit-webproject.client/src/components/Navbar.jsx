@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-
 function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -28,37 +27,24 @@ function Navbar() {
     useEffect(() => {
         const fetchSportscholen = async () => {
             try {
-
                 const response = await fetch("https://localhost:7093/api/sportschool/navbar");
-                if (!response.ok) {
-                    throw new Error("Kan sportscholen niet ophalen");
-                }
+                if (!response.ok) throw new Error("Kan sportscholen niet ophalen");
                 const data = await response.json();
                 setLocations(data);
-
             } catch (err) {
-
                 setError(err.message);
-
             } finally {
-
                 setLoading(false);
             }
         };
-
         fetchSportscholen();
-
     }, []);
 
     return (
         <header className="navbar">
             <div className="navbar-container">
                 <NavLink to="/" className="logo" onClick={closeMenu} aria-label="AllFit home">
-                    <img
-                        src="/images/allfit-logo.png"
-                        alt="AllFit logo"
-                        className="navbar-logo-img"
-                    />
+                    <img src="/images/allfit-logo.png" alt="AllFit logo" className="navbar-logo-img" />
                 </NavLink>
 
                 <button
@@ -94,19 +80,17 @@ function Navbar() {
 
                         {dropdownOpen && (
                             <div className="dropdown-menu">
-                                {sportscholen.map((sportschool) => {
-                                    return (
-                                        <NavLink
-                                            key={sportschool.id}
-                                            to="/aanbod"
-                                            state={{ selectedLocationId: sportschool.id }}
-                                            className="dropdown-item"
-                                            onClick={closeMenu}
-                                        >
-                                            {sportschool.naam}
-                                        </NavLink>
-                                    );
-                                })}
+                                {sportscholen.map((sportschool) => (
+                                    <NavLink
+                                        key={sportschool.id}
+                                        to="/aanbod"
+                                        state={{ selectedLocationId: sportschool.id }}
+                                        className="dropdown-item"
+                                        onClick={closeMenu}
+                                    >
+                                        {sportschool.naam}
+                                    </NavLink>
+                                ))}
                             </div>
                         )}
                     </div>
@@ -120,7 +104,7 @@ function Navbar() {
                     </NavLink>
 
                     {!isAuthenticated ? (
-                        <NavLink to="/login" className={getLinkClass} onClick={ closeMenu}>
+                        <NavLink to="/login" className={getLinkClass} onClick={closeMenu}>
                             Inloggen
                         </NavLink>
                     ) : (
@@ -142,8 +126,6 @@ function Navbar() {
                                     <NavLink to="/account/overzicht" className="dropdown-item" onClick={closeMenu}>
                                         Overzicht
                                     </NavLink>
-
-
                                     <button
                                         type="button"
                                         className="dropdown-item logout-button"

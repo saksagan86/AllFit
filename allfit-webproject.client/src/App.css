@@ -1133,3 +1133,20 @@ ul {
     color: #555;
     margin-top: 6px;
 }
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background-color: #3DC2C7;
+    color: white;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+    z-index: 9999;
+    text-decoration: none;
+    border-radius: 0 0 8px 0;
+}
+
+    .skip-link:focus {
+        top: 0;
+    }

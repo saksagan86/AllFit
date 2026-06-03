@@ -13,7 +13,7 @@ function buildCustomButton(buttoninhoud, link, custombutton) {
 function InfoBlock({ title, description, foto_url, buttoninhoud, link, custombutton }) {
     return (
         <div className='block'>
-            <img src={foto_url} className='block-foto'></img>
+            <img src={foto_url} alt="allfit sporters" className='block-foto'></img>
             <div className='block-info'>
                 <h2>
                     {title}
