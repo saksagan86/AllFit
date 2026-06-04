@@ -153,3 +153,6 @@ app.MapFallbackToFile("/index.html");
 
 
 app.Run();
+
+// Expose Program class for integration testing
+public partial class Program { }
