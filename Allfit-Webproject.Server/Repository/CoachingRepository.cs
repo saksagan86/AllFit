@@ -144,6 +144,34 @@ namespace Allfit_Webproject.Server.Repository
             );
         }
 
+        public async Task<WekelijkseVoortgang?> HaalWeekVoortgangOpAsync(
+            int gebruikerCoachingProfielId,
+            DateTime weekStartDatum
+        )
+        {
+            return await _context.WekelijkseVoortgangen
+                .FirstOrDefaultAsync(wv =>
+                wv.gebruikerCoachingProfielId == gebruikerCoachingProfielId &&
+                wv.weekStartDatum == weekStartDatum.Date
+            );
+        }
+
+        public async Task VoegWekelijkseVoortgangToeAsync(WekelijkseVoortgang voortgang)
+        {
+            await _context.WekelijkseVoortgangen.AddAsync(voortgang);
+        }
+
+        public async Task<List<WekelijkseVoortgang>> HaalWeekHistorieOpAsync(
+            int gebruikerCoachingProfielId
+        )
+        {
+            return await _context.WekelijkseVoortgangen
+                .Where(wv => wv.gebruikerCoachingProfielId == gebruikerCoachingProfielId)
+                .OrderByDescending(wv => wv.weekStartDatum)
+                .Take(26)
+                .ToListAsync();
+}
+
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();

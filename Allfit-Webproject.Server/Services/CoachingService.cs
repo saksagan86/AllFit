@@ -57,6 +57,24 @@ namespace Allfit_Webproject.Server.Services
                 ? 0
                 : Math.Min(100, (int)Math.Round((double)afgerondDezeWeek / weekDoel * 100));
 
+
+            var weekRecords = profiel == null
+                ? new List<WekelijkseVoortgang>()
+                : await _repository.HaalWeekHistorieOpAsync(profiel.id);
+
+            var weekHistorie = weekRecords.Any()
+                ? MapWeekHistorie(weekRecords)
+                : MaakWeekHistorie(alleHistorie, weekDoel);
+
+            var maandHistorie = MaakMaandHistorie(weekHistorie);
+
+            var langeTermijnEvaluatie = profiel == null
+                ? null
+                : BerekenLangeTermijnEvaluatie(
+                    profiel,
+                    gebruikerDoel.doel.naam,
+                    weekRecords
+                );
             return new CoachingDashboardDto
             {
                 HeeftDoel = true,
@@ -77,6 +95,10 @@ namespace Allfit_Webproject.Server.Services
                     Leeftijd = profiel.leeftijd,
                     LengteCm = profiel.lengteCm,
                     GewichtKg = profiel.gewichtKg,
+                    StartGewichtKg = profiel.startGewichtKg,
+                    DoelGewichtKg = profiel.doelGewichtKg,
+                    StartDatum = profiel.startDatum,
+                    EindDatum = profiel.eindDatum,
                     Activiteitniveau = profiel.activiteitniveau,
                     DoelTermijnMaanden = profiel.doelTermijnMaanden,
                     Bmi = profiel.bmi,
@@ -110,7 +132,9 @@ namespace Allfit_Webproject.Server.Services
                     Notitie = h.notitie
                 }).ToList(),
 
-                WeekHistorie = MaakWeekHistorie(alleHistorie, weekDoel)
+               WeekHistorie = weekHistorie,
+               MaandHistorie = maandHistorie,
+               LangeTermijnEvaluatie = langeTermijnEvaluatie
             };
         }
 
@@ -123,8 +147,7 @@ namespace Allfit_Webproject.Server.Services
                 return null;
             }
 
-            var gebruikerDoel = await _repository.HaalGebruikerDoelOpAsync(gebruikerId);
-
+            var gebruikerDoel = await _repository.HaalGebruikerDoelMetDoelOpAsync(gebruikerId);
             if (gebruikerDoel == null)
             {
                 gebruikerDoel = new GebruikerDoel
@@ -208,17 +231,30 @@ namespace Allfit_Webproject.Server.Services
                 await _repository.VoegCoachingProfielToeAsync(profiel);
             }
 
+            var termijn = dto.DoelTermijnMaanden <= 0 ? 6 : dto.DoelTermijnMaanden;
+            var doelGewijzigd = profiel.doelId != 0 && profiel.doelId != dto.DoelId;
+
+            if (profiel.startDatum == null || profiel.startGewichtKg == null || doelGewijzigd)
+            {
+                profiel.startDatum = DateTime.UtcNow;
+                profiel.startGewichtKg = dto.GewichtKg;
+            }
+
+            profiel.eindDatum = profiel.startDatum.Value.AddMonths(termijn);
+
             profiel.doelId = dto.DoelId;
             profiel.leeftijd = dto.Leeftijd;
             profiel.lengteCm = dto.LengteCm;
             profiel.gewichtKg = dto.GewichtKg;
+            profiel.doelGewichtKg = dto.DoelGewichtKg;
             profiel.activiteitniveau = activiteitniveau;
-            profiel.doelTermijnMaanden = dto.DoelTermijnMaanden <= 0
-                ? 6
-                : dto.DoelTermijnMaanden;
+            profiel.doelTermijnMaanden = termijn;
             profiel.bmi = bmi;
             profiel.bmiCategorie = bmiCategorie;
             profiel.adviesTemplateId = adviesTemplate?.id;
+            profiel.doelAfgerond = false;
+            profiel.doelBehaald = null;
+            profiel.evaluatieTekst = null;
             profiel.gewijzigdOp = DateTime.UtcNow;
 
             await _repository.SaveChangesAsync();
@@ -261,6 +297,22 @@ namespace Allfit_Webproject.Server.Services
             };
 
             await _repository.VoegTrainingVoortgangToeAsync(voortgang);
+            await _repository.SaveChangesAsync();
+
+            var profiel = await _repository.HaalCoachingProfielOpAsync(gebruikerId);
+            var activiteitniveau = profiel?.activiteitniveau ?? "Gemiddeld";
+
+            var trainingsschema = MaakTrainingsschema(
+                gebruikerDoel.doel?.naam ?? "",
+                activiteitniveau
+            );
+
+            await UpdateWekelijkseVoortgangAsync(
+                gebruikerId,
+                gebruikerDoel,
+                trainingsschema.Count
+            );
+
             await _repository.SaveChangesAsync();
 
             return await GetDashboardAsync(gebruikerId);
@@ -381,6 +433,301 @@ namespace Allfit_Webproject.Server.Services
                     };
                 })
                 .ToList();
+        }
+        public async Task<CoachingDashboardDto?> SlaWeekVoortgangOpAsync(
+            int gebruikerId,
+            WeekVoortgangOpslaanDto dto
+        )
+        {
+            var profiel = await _repository.HaalCoachingProfielOpAsync(gebruikerId);
+            var gebruikerDoel = await _repository.HaalGebruikerDoelMetDoelOpAsync(gebruikerId);
+
+            if (profiel == null || gebruikerDoel == null)
+            {
+                return null;
+            }
+
+            var weekStartDatum = BepaalWeekStart(DateTime.UtcNow);
+
+            var weekVoortgang = await _repository.HaalWeekVoortgangOpAsync(
+                profiel.id,
+                weekStartDatum
+            );
+
+            if (weekVoortgang == null)
+            {
+                var trainingsschema = MaakTrainingsschema(
+                    gebruikerDoel.doel?.naam ?? "",
+                    profiel.activiteitniveau
+                );
+
+                weekVoortgang = new WekelijkseVoortgang
+                {
+                    gebruikerCoachingProfielId = profiel.id,
+                    weekStartDatum = weekStartDatum,
+                    weekDoel = trainingsschema.Count,
+                    afgerondeTrainingen = 0,
+                    doelBehaald = false,
+                    aangemaaktOp = DateTime.UtcNow
+                };
+
+                await _repository.VoegWekelijkseVoortgangToeAsync(weekVoortgang);
+            }
+
+            weekVoortgang.gewichtKg = dto.GewichtKg;
+            weekVoortgang.notitie = dto.Notitie;
+            weekVoortgang.gewijzigdOp = DateTime.UtcNow;
+
+            if (dto.GewichtKg.HasValue)
+            {
+                profiel.gewichtKg = dto.GewichtKg.Value;
+                profiel.gewijzigdOp = DateTime.UtcNow;
+            }
+
+            await _repository.SaveChangesAsync();
+
+            return await GetDashboardAsync(gebruikerId);
+        }
+
+        private async Task UpdateWekelijkseVoortgangAsync(
+            int gebruikerId,
+            GebruikerDoel gebruikerDoel,
+            int weekDoel
+        )
+        {
+            var profiel = await _repository.HaalCoachingProfielOpAsync(gebruikerId);
+
+            if (profiel == null)
+            {
+                return;
+            }
+
+            var weekStartDatum = BepaalWeekStart(DateTime.UtcNow);
+            var alleHistorie = await _repository.HaalAlleHistorieOpAsync(gebruikerDoel.id);
+
+            var afgerondeTrainingenWerkelijk = alleHistorie
+                .Where(h => BepaalWeekStart(h.afgerondOp) == weekStartDatum)
+                .Select(h => h.trainingsDag)
+                .Distinct()
+                .Count();
+
+            var afgerondeTrainingen = Math.Min(afgerondeTrainingenWerkelijk, weekDoel);
+
+            var weekVoortgang = await _repository.HaalWeekVoortgangOpAsync(
+                profiel.id,
+                weekStartDatum
+            );
+
+            if (weekVoortgang == null)
+            {
+                weekVoortgang = new WekelijkseVoortgang
+                {
+                    gebruikerCoachingProfielId = profiel.id,
+                    weekStartDatum = weekStartDatum,
+                    gewichtKg = profiel.gewichtKg,
+                    aangemaaktOp = DateTime.UtcNow
+                };
+
+                await _repository.VoegWekelijkseVoortgangToeAsync(weekVoortgang);
+            }
+
+            weekVoortgang.afgerondeTrainingen = afgerondeTrainingen;
+            weekVoortgang.weekDoel = weekDoel;
+            weekVoortgang.doelBehaald = weekDoel > 0 && afgerondeTrainingen >= weekDoel;
+            weekVoortgang.gewijzigdOp = DateTime.UtcNow;
+        }
+
+        private List<WeekVoortgangDto> MapWeekHistorie(
+            List<WekelijkseVoortgang> weekHistorie
+        )
+        {
+            return weekHistorie.Select(wv =>
+            {
+                var percentage = wv.weekDoel == 0
+                    ? 0
+                    : Math.Min(
+                        100,
+                        (int)Math.Round((double)wv.afgerondeTrainingen / wv.weekDoel * 100)
+                    );
+
+                return new WeekVoortgangDto
+                {
+                    WeekStartDatum = wv.weekStartDatum,
+                    GewichtKg = wv.gewichtKg,
+                    AfgerondeTrainingen = wv.afgerondeTrainingen,
+                    WeekDoel = wv.weekDoel,
+                    DoelBehaald = wv.doelBehaald,
+                    Percentage = percentage,
+                    StatusTekst = MaakStatusTekst(wv.afgerondeTrainingen, wv.weekDoel),
+                    Notitie = wv.notitie
+                };
+            }).ToList();
+        }
+
+        private List<MaandVoortgangDto> MaakMaandHistorie(
+            List<WeekVoortgangDto> weekHistorie
+        )
+        {
+            return weekHistorie
+                .GroupBy(w => new
+                {
+                    w.WeekStartDatum.Year,
+                    w.WeekStartDatum.Month
+                })
+                .OrderByDescending(g => g.Key.Year)
+                .ThenByDescending(g => g.Key.Month)
+                .Take(6)
+                .Select(g =>
+                {
+                    var afgerond = g.Sum(x => x.AfgerondeTrainingen);
+                    var doel = g.Sum(x => x.WeekDoel);
+
+                    var percentage = doel == 0
+                        ? 0
+                        : Math.Min(100, (int)Math.Round((double)afgerond / doel * 100));
+
+                    var gewichten = g
+                        .Where(x => x.GewichtKg.HasValue)
+                        .Select(x => x.GewichtKg!.Value)
+                        .ToList();
+
+                    return new MaandVoortgangDto
+                    {
+                        Maand = $"{g.Key.Month:D2}-{g.Key.Year}",
+                        AantalWeken = g.Count(),
+                        AfgerondeTrainingen = afgerond,
+                        WeekDoelTotaal = doel,
+                        Percentage = percentage,
+                        StatusTekst = percentage >= 80
+                            ? "Goed op schema"
+                            : percentage >= 50
+                                ? "Redelijk op schema"
+                                : "Achter op schema",
+                        GemiddeldGewichtKg = gewichten.Any()
+                            ? Math.Round(gewichten.Average(), 1)
+                            : null
+                    };
+                })
+                .ToList();
+        }
+
+        private LangeTermijnEvaluatieDto BerekenLangeTermijnEvaluatie(
+            GebruikerCoachingProfiel profiel,
+            string doelNaam,
+            List<WekelijkseVoortgang> weken
+        )
+        {
+            var startGewicht = profiel.startGewichtKg ?? profiel.gewichtKg;
+            var huidigGewicht = weken
+                .Where(w => w.gewichtKg.HasValue)
+                .OrderByDescending(w => w.weekStartDatum)
+                .FirstOrDefault()
+                ?.gewichtKg ?? profiel.gewichtKg;
+
+            var doelGewicht = profiel.doelGewichtKg;
+            var totaalWeken = weken.Count;
+            var wekenBehaald = weken.Count(w => w.doelBehaald);
+
+            var consistentie = totaalWeken == 0
+                ? 0
+                : (int)Math.Round((double)wekenBehaald / totaalWeken * 100);
+
+            var eindDatum = profiel.eindDatum;
+            var isEindDatumBereikt = eindDatum.HasValue && DateTime.UtcNow.Date >= eindDatum.Value.Date;
+            var dagenTotEinddatum = eindDatum.HasValue
+                ? Math.Max(0, (eindDatum.Value.Date - DateTime.UtcNow.Date).Days)
+                : 0;
+
+            var doel = doelNaam.ToLowerInvariant();
+            bool? doelBehaald = null;
+
+            if (doel.Contains("afvallen") && doelGewicht.HasValue)
+            {
+                doelBehaald = huidigGewicht <= doelGewicht.Value;
+            }
+            else if ((doel.Contains("aankomen") || doel.Contains("spier")) && doelGewicht.HasValue)
+            {
+                doelBehaald = huidigGewicht >= doelGewicht.Value && consistentie >= 70;
+            }
+            else if (doel.Contains("gewicht") || doel.Contains("gezond"))
+            {
+                doelBehaald = Math.Abs(huidigGewicht - startGewicht) <= 2;
+            }
+
+            var analyse = MaakLangeTermijnAnalyseTekst(
+                doelBehaald,
+                doelNaam,
+                startGewicht,
+                huidigGewicht,
+                doelGewicht,
+                consistentie,
+                totaalWeken,
+                wekenBehaald,
+                isEindDatumBereikt
+            );
+
+            return new LangeTermijnEvaluatieDto
+            {
+                KanEvalueren = totaalWeken > 0,
+                IsEindDatumBereikt = isEindDatumBereikt,
+                DoelBehaald = doelBehaald,
+                Status = doelBehaald == true
+                    ? "Doel behaald"
+                    : doelBehaald == false
+                        ? "Nog niet behaald"
+                        : "Nog niet te beoordelen",
+                AnalyseTekst = analyse,
+                StartGewichtKg = startGewicht,
+                HuidigGewichtKg = huidigGewicht,
+                DoelGewichtKg = doelGewicht,
+                TrainingsConsistentiePercentage = consistentie,
+                AantalWeken = totaalWeken,
+                WekenDoelBehaald = wekenBehaald,
+                DagenTotEinddatum = dagenTotEinddatum
+            };
+        }
+
+        private string MaakLangeTermijnAnalyseTekst(
+            bool? doelBehaald,
+            string doelNaam,
+            decimal startGewicht,
+            decimal huidigGewicht,
+            decimal? doelGewicht,
+            int consistentie,
+            int totaalWeken,
+            int wekenBehaald,
+            bool isEindDatumBereikt
+        )
+        {
+            if (totaalWeken == 0)
+            {
+                return "Er zijn nog geen wekelijkse voortgangsgegevens. Rond trainingen af en vul wekelijks je gewicht in om je langetermijndoel beter te kunnen beoordelen.";
+            }
+
+            var periodeTekst = isEindDatumBereikt
+                ? "De einddatum is bereikt."
+                : "De einddatum is nog niet bereikt, dit is een tussenstand.";
+
+            var basis =
+                $"{periodeTekst} Je hebt in {wekenBehaald} van de {totaalWeken} weken je trainingsdoel gehaald. " +
+                $"Je trainingsconsistentie is {consistentie}%.";
+
+            if (doelBehaald == true)
+            {
+                return basis + " Op basis van je huidige gegevens lig je goed op schema of heb je je doel behaald.";
+            }
+
+            if (consistentie < 50)
+            {
+                return basis + " Je hebt je doel waarschijnlijk nog niet gehaald omdat je in veel weken onder je trainingsdoel zat.";
+            }
+
+            if (doelGewicht.HasValue)
+            {
+                return basis + $" Je huidige gewicht is {huidigGewicht} kg en je doelgewicht is {doelGewicht.Value} kg. Je bent dus nog niet volledig bij je doelgewicht.";
+            }
+
+            return basis + " Er is nog niet genoeg doelinformatie om een definitieve conclusie te trekken.";
         }
 
         private string MaakStatusTekst(int afgerondeTrainingen, int weekDoel)
