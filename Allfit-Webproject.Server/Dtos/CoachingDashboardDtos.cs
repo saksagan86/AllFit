@@ -14,6 +14,9 @@
         public ProgressDto Progress { get; set; } = new();
         public List<TrainingHistorieDto> Historie { get; set; } = new();
         public List<WeekVoortgangDto> WeekHistorie { get; set; } = new();
+        public List<MaandVoortgangDto> MaandHistorie { get; set; } = new();
+
+        public LangeTermijnEvaluatieDto? LangeTermijnEvaluatie { get; set; }
     }
 
     public class CoachingDoelDto
@@ -29,6 +32,10 @@
         public int Leeftijd { get; set; }
         public decimal LengteCm { get; set; }
         public decimal GewichtKg { get; set; }
+        public decimal? StartGewichtKg { get; set; }
+        public decimal? DoelGewichtKg { get; set; }
+        public DateTime? StartDatum { get; set; }
+        public DateTime? EindDatum { get; set; }
         public string Activiteitniveau { get; set; } = string.Empty;
         public int DoelTermijnMaanden { get; set; }
         public decimal Bmi { get; set; }
@@ -70,11 +77,43 @@
     public class WeekVoortgangDto
     {
         public DateTime WeekStartDatum { get; set; }
+        public decimal? GewichtKg { get; set; }
         public int AfgerondeTrainingen { get; set; }
         public int WeekDoel { get; set; }
         public bool DoelBehaald { get; set; }
         public int Percentage { get; set; }
         public string StatusTekst { get; set; } = string.Empty;
+        public string? Notitie { get; set; }
+    }
+
+    public class MaandVoortgangDto
+    {
+        public string Maand { get; set; } = string.Empty;
+        public int AantalWeken { get; set; }
+        public int AfgerondeTrainingen { get; set; }
+        public int WeekDoelTotaal { get; set; }
+        public int Percentage { get; set; }
+        public string StatusTekst { get; set; } = string.Empty;
+        public decimal? GemiddeldGewichtKg { get; set; }
+    }
+
+    public class LangeTermijnEvaluatieDto
+    {
+        public bool KanEvalueren { get; set; }
+        public bool IsEindDatumBereikt { get; set; }
+        public bool? DoelBehaald { get; set; }
+
+        public string Status { get; set; } = string.Empty;
+        public string AnalyseTekst { get; set; } = string.Empty;
+
+        public decimal? StartGewichtKg { get; set; }
+        public decimal? HuidigGewichtKg { get; set; }
+        public decimal? DoelGewichtKg { get; set; }
+
+        public int TrainingsConsistentiePercentage { get; set; }
+        public int AantalWeken { get; set; }
+        public int WekenDoelBehaald { get; set; }
+        public int DagenTotEinddatum { get; set; }
     }
 
     public class CoachingProfielAanvraagDto
@@ -83,8 +122,15 @@
         public int Leeftijd { get; set; }
         public decimal LengteCm { get; set; }
         public decimal GewichtKg { get; set; }
+        public decimal? DoelGewichtKg { get; set; }
         public string Activiteitniveau { get; set; } = string.Empty;
         public int DoelTermijnMaanden { get; set; } = 6;
+    }
+
+    public class WeekVoortgangOpslaanDto
+    {
+        public decimal? GewichtKg { get; set; }
+        public string? Notitie { get; set; }
     }
 
     public class KiesCoachingDoelDto

@@ -15,8 +15,14 @@ function CoachingDashboardPage() {
         leeftijd: '',
         lengteCm: '',
         gewichtKg: '',
+        doelGewichtKg: '',
         activiteitniveau: 'Gemiddeld',
         doelTermijnMaanden: 6
+    });
+
+    const [weekForm, setWeekForm] = useState({
+        gewichtKg: '',
+        notitie: ''
     });
 
     useEffect(() => {
@@ -32,8 +38,14 @@ function CoachingDashboardPage() {
                 leeftijd: data.profiel.leeftijd || '',
                 lengteCm: data.profiel.lengteCm || '',
                 gewichtKg: data.profiel.gewichtKg || '',
+                doelGewichtKg: data.profiel.doelGewichtKg || '',
                 activiteitniveau: data.profiel.activiteitniveau || 'Gemiddeld',
                 doelTermijnMaanden: data.profiel.doelTermijnMaanden || 6
+            });
+
+            setWeekForm({
+                gewichtKg: data.profiel.gewichtKg || '',
+                notitie: ''
             });
             return;
         }
@@ -80,6 +92,52 @@ function CoachingDashboardPage() {
             [name]: value
         }));
     };
+    const handleWeekChange = (event) => {
+        const { name, value } = event.target;
+
+        setWeekForm((huidig) => ({
+            ...huidig,
+            [name]: value
+        }));
+    };
+
+    const slaWeekVoortgangOp = async (event) => {
+        event.preventDefault();
+
+        setOpslaanBezig(true);
+        setError('');
+
+        try {
+            const response = await fetch('/api/Coaching/week-voortgang', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    gewichtKg:
+                        weekForm.gewichtKg === ''
+                            ? null
+                            : Number(weekForm.gewichtKg),
+                    notitie: weekForm.notitie
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setError(data.message || 'Weekvoortgang kon niet worden opgeslagen.');
+                return;
+            }
+
+            setDashboard(data);
+            vulProfielForm(data);
+        } catch {
+            setError('Er is iets misgegaan bij het opslaan van je weekvoortgang.');
+        } finally {
+            setOpslaanBezig(false);
+        }
+    };
 
     const slaProfielOp = async (event) => {
         event.preventDefault();
@@ -92,6 +150,10 @@ function CoachingDashboardPage() {
             leeftijd: Number(profielForm.leeftijd),
             lengteCm: Number(profielForm.lengteCm),
             gewichtKg: Number(profielForm.gewichtKg),
+            doelGewichtKg:
+                profielForm.doelGewichtKg === ''
+                    ? null
+                    : Number(profielForm.doelGewichtKg),
             activiteitniveau: profielForm.activiteitniveau,
             doelTermijnMaanden: Number(profielForm.doelTermijnMaanden)
         };
@@ -276,6 +338,20 @@ function CoachingDashboardPage() {
                                         required
                                     />
                                 </div>
+                                <div className="form-group">
+                                    <label htmlFor="doelGewichtKg">Doelgewicht in kg</label>
+                                    <input
+                                        id="doelGewichtKg"
+                                        name="doelGewichtKg"
+                                        type="number"
+                                        min="30"
+                                        max="250"
+                                        step="0.1"
+                                        value={profielForm.doelGewichtKg}
+                                        onChange={handleProfielChange}
+                                        placeholder="Bijv. 78"
+                                    />
+                                </div>
 
                                 <div className="form-group">
                                     <label htmlFor="activiteitniveau">Activiteitniveau</label>
@@ -368,6 +444,23 @@ function CoachingDashboardPage() {
                                     </p>
                                 </article>
                             </div>
+                                 <article className="dashboard-panel">
+                                    <h3>Langetermijndoel</h3>
+                                    <p>Startgewicht: {dashboard.profiel.startGewichtKg ?? '-'} kg</p>
+                                    <p>Doelgewicht: {dashboard.profiel.doelGewichtKg ?? '-'} kg</p>
+                                    <p>
+                                        Startdatum:{' '}
+                                        {dashboard.profiel.startDatum
+                                            ? new Date(dashboard.profiel.startDatum).toLocaleDateString('nl-NL')
+                                            : '-'}
+                                    </p>
+                                    <p>
+                                        Einddatum:{' '}
+                                        {dashboard.profiel.eindDatum
+                                            ? new Date(dashboard.profiel.eindDatum).toLocaleDateString('nl-NL')
+                                            : '-'}
+                                    </p>
+                                </article>
                         </section>
 
                         <section className="dashboard-section">
@@ -434,7 +527,72 @@ function CoachingDashboardPage() {
                                     {progress.percentage}%
                                 </strong>
                             </article>
+                            <article className="dashboard-panel" style={{ marginTop: '1rem' }}>
+                                <h3>Weekgegevens bijwerken</h3>
+
+                                <form onSubmit={slaWeekVoortgangOp}>
+                                    <div className="form-group">
+                                        <label htmlFor="weekGewichtKg">Gewicht deze week</label>
+                                        <input
+                                            id="weekGewichtKg"
+                                            name="gewichtKg"
+                                            type="number"
+                                            min="30"
+                                            max="250"
+                                            step="0.1"
+                                            value={weekForm.gewichtKg}
+                                            onChange={handleWeekChange}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <label htmlFor="weekNotitie">Notitie</label>
+                                        <input
+                                            id="weekNotitie"
+                                            name="notitie"
+                                            type="text"
+                                            value={weekForm.notitie}
+                                            onChange={handleWeekChange}
+                                            placeholder="Bijv. drukke week, cardio gemist..."
+                                        />
+                                    </div>
+
+                                    <button className="button" type="submit" disabled={opslaanBezig}>
+                                        Week opslaan
+                                    </button>
+                                </form>
+                            </article>
                         </section>
+                        {dashboard.langeTermijnEvaluatie && (
+                        <section className="dashboard-section">
+                            <h2>Langetermijn evaluatie</h2>
+
+                            <article className="dashboard-panel">
+                                <h3>{dashboard.langeTermijnEvaluatie.status}</h3>
+
+                                <p>{dashboard.langeTermijnEvaluatie.analyseTekst}</p>
+
+                                <p>
+                                    Trainingsconsistentie:{' '}
+                                    {dashboard.langeTermijnEvaluatie.trainingsConsistentiePercentage}%
+                                </p>
+
+                                <p>
+                                    Weken doel behaald:{' '}
+                                    {dashboard.langeTermijnEvaluatie.wekenDoelBehaald}/
+                                    {dashboard.langeTermijnEvaluatie.aantalWeken}
+                                </p>
+
+                                {!dashboard.langeTermijnEvaluatie.isEindDatumBereikt && (
+                                    <p>
+                                        Nog {dashboard.langeTermijnEvaluatie.dagenTotEinddatum} dagen tot
+                                        de einddatum.
+                                    </p>
+                                )}
+                            </article>
+                        </section>
+                    )}
+                    
 
                         <section className="dashboard-section">
                             <h2>Trainingsschema</h2>
@@ -471,7 +629,35 @@ function CoachingDashboardPage() {
                                 ))}
                             </div>
                         </section>
+                        <section className="dashboard-section">
+                            <h2>Maandoverzicht</h2>
 
+                            {dashboard.maandHistorie.length === 0 ? (
+                                <article className="dashboard-panel">
+                                    <p>Er is nog geen maandoverzicht beschikbaar.</p>
+                                </article>
+                            ) : (
+                                <div className="dashboard-grid">
+                                    {dashboard.maandHistorie.map((maand) => (
+                                        <article key={maand.maand} className="dashboard-panel">
+                                            <h3>{maand.maand}</h3>
+                                            <p>
+                                                {maand.afgerondeTrainingen}/{maand.weekDoelTotaal}{' '}
+                                                trainingen afgerond
+                                            </p>
+                                            <p>{maand.statusTekst}</p>
+                                            <p>Progressie: {maand.percentage}%</p>
+                                            <p>
+                                                Gemiddeld gewicht:{' '}
+                                                {maand.gemiddeldGewichtKg
+                                                    ? `${maand.gemiddeldGewichtKg} kg`
+                                                    : '-'}
+                                            </p>
+                                        </article>
+                                    ))}
+                                </div>
+                            )}
+                        </section>
                         <section className="dashboard-section">
                             <h2>Weekhistorie</h2>
 
@@ -507,36 +693,7 @@ function CoachingDashboardPage() {
                             )}
                         </section>
 
-                        <section className="dashboard-section">
-                            <h2>Recente trainingen</h2>
-
-                            {dashboard.historie.length === 0 ? (
-                                <article className="dashboard-panel">
-                                    <p>Je hebt nog geen trainingen afgerond.</p>
-                                </article>
-                            ) : (
-                                <article className="dashboard-panel">
-                                    {dashboard.historie.map((item) => (
-                                        <div
-                                            key={item.id}
-                                            style={{
-                                                borderBottom: '1px solid #ddd',
-                                                padding: '0.75rem 0'
-                                            }}
-                                        >
-                                            <strong>{item.trainingsDag}</strong>
-                                            <p>
-                                                Afgerond op:{' '}
-                                                {new Date(
-                                                    item.afgerondOp
-                                                ).toLocaleDateString('nl-NL')}
-                                            </p>
-                                            {item.notitie && <p>{item.notitie}</p>}
-                                        </div>
-                                    ))}
-                                </article>
-                            )}
-                        </section>
+                        
 
                         <section className="dashboard-section">
                             <button

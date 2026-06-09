@@ -91,6 +91,25 @@ namespace Allfit_Webproject.Server.Controllers
 
             return Ok(result);
         }
+        [HttpPost("week-voortgang")]
+        public async Task<IActionResult> SlaWeekVoortgangOp([FromBody] WeekVoortgangOpslaanDto dto)
+        {
+            var gebruikerId = GetIngelogdeGebruikerId();
+
+            if (gebruikerId == null)
+            {
+                return Unauthorized(new { message = "Gebruiker kon niet uit de token worden gehaald." });
+            }
+
+            var result = await _coachingService.SlaWeekVoortgangOpAsync(gebruikerId.Value, dto);
+
+            if (result == null)
+            {
+                return BadRequest(new { message = "Weekvoortgang kon niet worden opgeslagen." });
+            }
+
+            return Ok(result);
+        }
 
         private int? GetIngelogdeGebruikerId()
         {

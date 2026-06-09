@@ -69,6 +69,18 @@ namespace Allfit_Webproject.Server.Repository
             DateTime weekStartDatum
         );
 
+        Task<WekelijkseVoortgang?> HaalWeekVoortgangOpAsync(
+            int gebruikerCoachingProfielId,
+            DateTime weekStartDatum
+        );
+
+        Task VoegWekelijkseVoortgangToeAsync(WekelijkseVoortgang voortgang);
+
+        Task<List<WekelijkseVoortgang>> HaalWeekHistorieOpAsync(
+            int gebruikerCoachingProfielId
+        );
+
+
         /// <summary>
         /// Bewaar alle openstaande wijzigingen (commit naar database).
         /// </summary>

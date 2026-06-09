@@ -12,7 +12,20 @@ namespace Allfit_Webproject.Server.Models
 
         public int leeftijd { get; set; }
         public decimal lengteCm { get; set; }
+
+        // Huidige/latest gewicht
         public decimal gewichtKg { get; set; }
+
+        // Lange termijn doel
+        public decimal? startGewichtKg { get; set; }
+        public decimal? doelGewichtKg { get; set; }
+
+        public DateTime? startDatum { get; set; }
+        public DateTime? eindDatum { get; set; }
+
+        public bool doelAfgerond { get; set; } = false;
+        public bool? doelBehaald { get; set; }
+        public string? evaluatieTekst { get; set; }
 
         public string activiteitniveau { get; set; } = string.Empty;
 
